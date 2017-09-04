@@ -1,8 +1,13 @@
 package edu.np.ece.ame_android_lecturer;
 
-/**
- * Created by MIYA on 31/08/17.
- */
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 
-public class NavigationActivity {
+public class NavigationActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_navigation);
+    }
 }
