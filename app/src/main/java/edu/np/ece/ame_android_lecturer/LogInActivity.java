@@ -61,10 +61,10 @@ public class LogInActivity extends AppCompatActivity {
             }
         });
 
-        SharedPreferences pref = getSharedPreferences(Preferences.SharedPreferencesTag, Preferences.SharedPreferences_ModeTag);
+       /* SharedPreferences pref = getSharedPreferences(Preferences.SharedPreferencesTag, Preferences.SharedPreferences_ModeTag);
         SharedPreferences.Editor editor = pref.edit();
         editor.putString("isLogin", "false");
-        editor.apply();
+        editor.apply();*/
     }
     public void login() {
 
