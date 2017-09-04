@@ -9,6 +9,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class LoginResult {
 
+    @SerializedName("id")
+    @Expose
+    private String id;
+
     @SerializedName("name")
     @Expose
     private String name;
@@ -33,7 +37,18 @@ public class LoginResult {
     @Expose
     private String email;
 
+    @SerializedName("device_hash")
+    @Expose
+    private String device_hash;
 
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -81,6 +96,14 @@ public class LoginResult {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getDevice_hash() {
+        return device_hash;
+    }
+
+    public void setDevice_hash(String device_hash) {
+        this.device_hash = device_hash;
     }
 
 }
