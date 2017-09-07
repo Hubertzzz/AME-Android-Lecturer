@@ -52,7 +52,10 @@ public class StudentListActivity extends FragmentActivity {
             tabNames[1]="Attendance";
 
             lesson_id=intent.getStringExtra("lesson_id");
+            Bundle args=new Bundle();
+            args.putString("lesson_id",lesson_id);
 
+            fragment.setArguments(args);
             fragmentList.add(fragment);
             fragmentList.add(new AttendanceHistoryListFragment());
             ViewpagerAdapter viewpagerAdapter = new ViewpagerAdapter(getSupportFragmentManager(),fragmentList);

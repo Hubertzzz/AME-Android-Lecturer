@@ -49,7 +49,7 @@ public interface ServerApi {
     Call<List<ListAttendanceStatus>> getStudentAttendanceStatus(@Body String lesson_date_id);
 
     @POST("timetable/get-student")
-    Call<List<StudentInfo>> getStudentList(@Body String lesson_id);
+    Call<List<StudentInfo>> getStudentList(@Body JsonObject lesson_id);
 
 
 

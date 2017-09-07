@@ -13,7 +13,7 @@ import java.util.List;
 public class LoginInfo {
     String username = "NULL";
     String password = "NULL";
-    String device_hash = "NULL";
+   /* String device_hash = "NULL";*/
 
     public LoginInfo(String _username, String _password, Context context){
         username = _username;
