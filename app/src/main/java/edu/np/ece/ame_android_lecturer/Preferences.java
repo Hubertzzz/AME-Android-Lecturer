@@ -3,8 +3,14 @@ package edu.np.ece.ame_android_lecturer;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+
+import edu.np.ece.ame_android_lecturer.Model.LoginResult;
+import edu.np.ece.ame_android_lecturer.Retrofit.ServerApi;
+import edu.np.ece.ame_android_lecturer.Retrofit.ServiceGenerator;
 
 /**
  * Created by MIYA on 31/08/17.
@@ -79,6 +85,38 @@ public class Preferences {
             return true;
         }
 
+    }
+    public static void setLecturerInfo(LoginResult _lecturerInfo) {
+        SharedPreferences pref = activity.getSharedPreferences("ATK_BLE_Preferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+
+        editor.putString("isLogin", "true");
+        editor.putString("isLecturer", "true");
+        editor.putString("lecturer_name", _lecturerInfo.getName());
+        editor.putString("lecturer_acad", _lecturerInfo.getAcad());
+        editor.putString("authorizationCode", "Bearer " + _lecturerInfo.getToken());
+        editor.putString("major", _lecturerInfo.getMajor());
+        editor.putString("minor", _lecturerInfo.getMinor());
+        editor.putString("email", _lecturerInfo.getEmail());
+
+
+        editor.apply();
+    }
+
+    public static void clearLecturerInfo() {
+        SharedPreferences pref = getActivity().getSharedPreferences("ATK_BLE_Preferences", Context.MODE_PRIVATE);
+        String auCode = pref.getString("authorizationCode", null);
+
+        SharedPreferences.Editor editor = pref.edit();
+
+        editor.clear();
+        editor.apply();
+
+        ServerApi client = ServiceGenerator.createService(ServerApi.class, auCode);
+        client.logout();
+
+        Intent intent = new Intent(getActivity(), LogInActivity.class);
+        activity.startActivity(intent);
     }
 
 }

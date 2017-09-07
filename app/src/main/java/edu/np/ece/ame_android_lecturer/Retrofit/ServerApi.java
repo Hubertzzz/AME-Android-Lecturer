@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import java.util.List;
 
 import edu.np.ece.ame_android_lecturer.Model.DateOfaLesson;
+import edu.np.ece.ame_android_lecturer.Model.ListAttendanceStatus;
 import edu.np.ece.ame_android_lecturer.Model.LoginInfo;
 import edu.np.ece.ame_android_lecturer.Model.LoginResult;
 import edu.np.ece.ame_android_lecturer.Model.TimetableResult;
@@ -37,12 +38,15 @@ public interface ServerApi {
     @POST("timetable/get-status")
     Call<String> checkAttendanceStatus(@Body JsonObject obj);
 
-    @GET("lesson-lecturer")
+    @GET("lesson-lecturer/weekly-lesson")
     Call<List<TimetableResult>> getTimetableCurrentWeek(@Query("expand") String expand);
 
     @GET("lesson-date/search")
     Call<List<DateOfaLesson>> getAllDateOfaLesson(@Query("lesson_id") String lesson_id);
 
+    @POST("attendance/list-attendance-status-by-lecturer")
+    Call<List<ListAttendanceStatus>> getStudentAttendanceStatus(@Body String lesson_date_id);
 
+    
 
 }
