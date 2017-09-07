@@ -4,10 +4,12 @@
     android:layout_height="match_parent"
     tools:context="edu.np.ece.ame_android_lecturer.Fragment.GroupFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="group" />
+
+    <ListView
+        android:id="@+id/group_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:divider="@color/divider"
+        android:dividerHeight="1px" />
 
 </FrameLayout>

@@ -11,6 +11,7 @@ import edu.np.ece.ame_android_lecturer.Model.DateOfaLesson;
 import edu.np.ece.ame_android_lecturer.Model.ListAttendanceStatus;
 import edu.np.ece.ame_android_lecturer.Model.LoginInfo;
 import edu.np.ece.ame_android_lecturer.Model.LoginResult;
+import edu.np.ece.ame_android_lecturer.Model.StudentInfo;
 import edu.np.ece.ame_android_lecturer.Model.TimetableResult;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -47,6 +48,9 @@ public interface ServerApi {
     @POST("attendance/list-attendance-status-by-lecturer")
     Call<List<ListAttendanceStatus>> getStudentAttendanceStatus(@Body String lesson_date_id);
 
-    
+    @POST("timetable/get-student")
+    Call<List<StudentInfo>> getStudentList(@Body String lesson_id);
+
+
 
 }

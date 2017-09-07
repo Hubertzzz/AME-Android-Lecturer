@@ -31,13 +31,13 @@ public class TimetableResult {
     @Expose
     private Venue venue;
 
-    @SerializedName("lesson_date")
+   /* @SerializedName("lesson_date")
     @Expose
     private LessonDate lesson_date;
 
     @SerializedName("beaconLesson")
     @Expose
-    private LessonBeacon lessonBeacon;
+    private LessonBeacon lessonBeacon;*/
 
 
     public String getId() {
@@ -68,13 +68,13 @@ public class TimetableResult {
         this.lesson = lesson;
     }
 
-    public LessonDate getLesson_date() {
+    /*public LessonDate getLesson_date() {
         return lesson_date;
     }
 
     public void setLesson_date(LessonDate lesson_date) {
         this.lesson_date = lesson_date;
-    }
+    }*/
 
     public Venue getVenue() {
         return venue;
@@ -84,13 +84,13 @@ public class TimetableResult {
         this.venue = venue;
     }
 
-    public LessonBeacon getLessonBeacon() {
+  /*  public LessonBeacon getLessonBeacon() {
         return lessonBeacon;
     }
 
     public void setLessonBeacon(LessonBeacon lessonBeacon) {
         this.lessonBeacon = lessonBeacon;
-    }
+    }*/
 
 
 
