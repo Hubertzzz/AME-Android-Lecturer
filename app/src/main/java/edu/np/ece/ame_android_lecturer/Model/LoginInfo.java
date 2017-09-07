@@ -18,10 +18,10 @@ public class LoginInfo {
     public LoginInfo(String _username, String _password, Context context){
         username = _username;
         password = _password;
-        device_hash = getMacAddr();
+       /* device_hash = getMacAddr();*/
     }
 
-    public static String getMacAddr() {
+    /*public static String getMacAddr() {
         try {
             List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
             for (NetworkInterface nif : all) {
@@ -45,7 +45,7 @@ public class LoginInfo {
         } catch (Exception ex) {
         }
         return "02:00:00:00:00:00";
-    }
+    }*/
 
 
 }

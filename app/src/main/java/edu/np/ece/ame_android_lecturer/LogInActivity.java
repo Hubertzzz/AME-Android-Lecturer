@@ -158,7 +158,7 @@ public class LogInActivity extends AppCompatActivity {
     public void loginAction(String username, String password) {
 
 
-        //Preferences.showLoading(this, "Log In", "Authenticating...");
+        Preferences.showLoading(this, "Log In", "Authenticating...");
         final Activity act = this;
         ServerApi client = ServiceGenerator.createService(ServerApi.class);
         LoginInfo up = new LoginInfo(username, password, this);
@@ -166,11 +166,13 @@ public class LogInActivity extends AppCompatActivity {
         call.enqueue(new ServerCallBack<LoginResult>() {
             @Override
             public void onResponse(Call<LoginResult> call, Response<LoginResult> response) {
-                // Preferences.setActivity(act);
-                // Preferences.dismissLoading();
+                 Preferences.setActivity(act);
+                 Preferences.dismissLoading();
                 int messageCode = response.code();
                 if (messageCode == 200) // SUCCESS
                 {
+                    Preferences.setLecturerInfo(response.body());
+
                     startNavigation();
                     onLoginSuccess();
 
