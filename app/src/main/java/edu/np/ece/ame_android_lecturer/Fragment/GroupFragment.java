@@ -12,8 +12,10 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,7 @@ import edu.np.ece.ame_android_lecturer.R;
 import edu.np.ece.ame_android_lecturer.Retrofit.ServerApi;
 import edu.np.ece.ame_android_lecturer.Retrofit.ServerCallBack;
 import edu.np.ece.ame_android_lecturer.Retrofit.ServiceGenerator;
+import edu.np.ece.ame_android_lecturer.StudentListActivity;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -99,6 +102,17 @@ public class GroupFragment extends Fragment {
         GroupListAdapter adapter = new GroupListAdapter(getActivity(), R.layout.item_tutorial_group,grouplist,cataloglist,arealist);
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
+                Intent intent = new Intent(getActivity(), StudentListActivity.class);
+                intent.putExtra("Group_name",timetableList.get(i).getLesson().getClass_section());
+                intent.putExtra("lesson_id",timetableList.get(i).getLesson_id());
+                startActivity(intent);
+                Toast.makeText(getActivity().getBaseContext(),timetableList.get(i).getLesson_id(),Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
 
