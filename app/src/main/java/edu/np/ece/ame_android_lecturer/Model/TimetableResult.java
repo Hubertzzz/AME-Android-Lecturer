@@ -3,8 +3,6 @@ package edu.np.ece.ame_android_lecturer.Model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 
 /**
  * Created by MIYA on 31/08/17.
@@ -30,6 +28,10 @@ public class TimetableResult {
     @SerializedName("venue")
     @Expose
     private Venue venue;
+
+//    @SerializedName("lecturers")
+//    @Expose
+//    private Lecturer lecturers;
 
     @SerializedName("lesson_date")
     @Expose
@@ -91,6 +93,14 @@ public class TimetableResult {
     public void setLessonBeacon(LessonBeacon lessonBeacon) {
         this.lessonBeacon = lessonBeacon;
     }
+
+//    public Lecturer getLecturers() {
+//        return lecturers;
+//    }
+//
+//    public void setLecturers(Lecturer lecturers) {
+//        this.lecturers = lecturers;
+//    }
 
 
 
