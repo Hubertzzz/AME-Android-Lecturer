@@ -1,6 +1,7 @@
 package edu.np.ece.ame_android_lecturer.Fragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,7 +9,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
+import edu.np.ece.ame_android_lecturer.Model.LessonDate;
+import edu.np.ece.ame_android_lecturer.Preferences;
 import edu.np.ece.ame_android_lecturer.R;
+import edu.np.ece.ame_android_lecturer.Retrofit.ServerApi;
+import edu.np.ece.ame_android_lecturer.Retrofit.ServerCallBack;
+import edu.np.ece.ame_android_lecturer.Retrofit.ServiceGenerator;
+import retrofit2.Call;
+import retrofit2.Response;
 
 
 public class AttendanceHistoryListFragment extends Fragment {
@@ -20,7 +30,9 @@ public class AttendanceHistoryListFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private View myView;
+    private String lesson_id;
+    private List<LessonDate> dateList;
 
 
     public AttendanceHistoryListFragment() {
@@ -54,11 +66,44 @@ public class AttendanceHistoryListFragment extends Fragment {
         }
     }
 
+    public void LoadList(){
+        //select timeslot & view history date
+        Bundle arguments = getArguments();
+        if(arguments!=null){
+            lesson_id=arguments.getString("lesson_id");
+        }
+        try {
+            SharedPreferences pref = getActivity().getSharedPreferences(Preferences.SharedPreferencesTag, Preferences.SharedPreferences_ModeTag);
+            String auCode = pref.getString("authorizationCode", null);
+
+            ServerApi client = ServiceGenerator.createService(ServerApi.class, auCode);
+            String expand=lesson_id;
+            Call<List<LessonDate>> call=client.getAllDateOfaLesson(expand);
+            call.enqueue(new ServerCallBack<List<LessonDate>>() {
+                @Override
+                public void onResponse(Call<List<LessonDate>> call, Response<List<LessonDate>> response) {
+                    try {
+                        dateList=response.body();
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_attendance_history_list, container, false);
+        myView= inflater.inflate(R.layout.fragment_attendance_history_list, container, false);
+        LoadList();
+        return myView;
     }
 
 

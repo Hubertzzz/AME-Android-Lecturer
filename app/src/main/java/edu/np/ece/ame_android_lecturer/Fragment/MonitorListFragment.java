@@ -1,14 +1,32 @@
 package edu.np.ece.ame_android_lecturer.Fragment;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
+import com.google.gson.JsonObject;
+
+import java.util.List;
+
+import edu.np.ece.ame_android_lecturer.Adapter.MonitorListAdapter;
+import edu.np.ece.ame_android_lecturer.LogInActivity;
+import edu.np.ece.ame_android_lecturer.Model.ListAttendanceStatus;
+import edu.np.ece.ame_android_lecturer.Preferences;
 import edu.np.ece.ame_android_lecturer.R;
+import edu.np.ece.ame_android_lecturer.Retrofit.ServerApi;
+import edu.np.ece.ame_android_lecturer.Retrofit.ServerCallBack;
+import edu.np.ece.ame_android_lecturer.Retrofit.ServiceGenerator;
+import retrofit2.Call;
+import retrofit2.Response;
 
 
 public class MonitorListFragment extends Fragment {
@@ -20,7 +38,9 @@ public class MonitorListFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private View myView;
+    private String lesson_date_id;
+    private List<ListAttendanceStatus> attendanceStatusList;
 
     public MonitorListFragment() {
         // Required empty public constructor
@@ -53,11 +73,68 @@ public class MonitorListFragment extends Fragment {
         }
     }
 
+    public void initStudentlist(){
+        final ListView listView = (ListView) myView.findViewById(R.id.monitorlist);
+
+
+        MonitorListAdapter monitorListAdapter = new MonitorListAdapter(getActivity(),R.layout.item_monitor_list,attendanceStatusList);
+        listView.setAdapter(monitorListAdapter);
+        monitorListAdapter.notifyDataSetChanged();
+
+    }
+
+    public void listAttendance(){
+        Preferences.showLoading(getActivity(), "Live Attendance Monitor", "Loading data from server...");
+        try {
+            SharedPreferences pref = getActivity().getSharedPreferences(Preferences.SharedPreferencesTag, Preferences.SharedPreferences_ModeTag);
+            String auCode = pref.getString("authorizationCode", null);
+
+            ServerApi client = ServiceGenerator.createService(ServerApi.class, auCode);
+            JsonObject toUp = new JsonObject();
+            lesson_date_id="31476";
+            toUp.addProperty("lesson_date_id",lesson_date_id);// 需要输入当前课的lesson_date_id
+            Call<List<ListAttendanceStatus>> call=client.getStudentAttendanceStatus(toUp);
+            call.enqueue(new ServerCallBack<List<ListAttendanceStatus>>() {
+                @Override
+                public void onResponse(Call<List<ListAttendanceStatus>> call, Response<List<ListAttendanceStatus>> response) {
+                    try {
+                        attendanceStatusList=response.body();
+                        if(attendanceStatusList==null){
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setTitle("ERROR");
+                            builder.setMessage("Cannot find student list");
+                            builder.setPositiveButton("OK",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(final DialogInterface dialogInterface, final int i) {
+                                            Preferences.clearLecturerInfo();
+                                            Intent intent = new Intent(getActivity(), LogInActivity.class);
+                                            startActivity(intent);
+                                            getActivity().finish();
+                                        }
+                                    });
+                            builder.create().show();
+                        }
+                        else {
+                            initStudentlist();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_monitor_list, container, false);
+        myView= inflater.inflate(R.layout.fragment_monitor_list, container, false);
+
+        return myView;
     }
 
 
