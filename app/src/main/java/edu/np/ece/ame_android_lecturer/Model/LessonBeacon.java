@@ -11,6 +11,10 @@ public class LessonBeacon {
     @Expose
     private String id;
 
+    @SerializedName("lesson_id")
+    @Expose
+    private String lesson_id;
+
     @SerializedName("uuid")
     @Expose
     private String uuid;
@@ -21,6 +25,14 @@ public class LessonBeacon {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getLesson_id() {
+        return lesson_id;
+    }
+
+    public void setLesson_id(String lesson_id) {
+        this.lesson_id = lesson_id;
     }
 
     public String getUuid() {

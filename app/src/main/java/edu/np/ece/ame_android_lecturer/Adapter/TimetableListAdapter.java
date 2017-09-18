@@ -54,7 +54,7 @@ public class TimetableListAdapter extends ArrayAdapter<TimetableResult> {
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
         SubjectHolder subjectHolder = null;
-        SeparatorHolder separatorHolder = null;
+        SeparatorHolder separatorHolder=null;
 
 
         int itemType = getItemViewType(position);
@@ -99,7 +99,7 @@ public class TimetableListAdapter extends ArrayAdapter<TimetableResult> {
             switch (itemType) {
                 //Put data into layout for display weekday
                 case Preferences.LIST_ITEM_TYPE_1:
-                   // separatorHolder.tvWeekDay.setText(subject.getLesson_date().getDate());
+                    separatorHolder.tvWeekDay.setText(subject.getLesson_date().getDate());
                     break;
 
                 //Put data into layout for display Subject
