@@ -28,7 +28,7 @@
             app:srcCompat="@drawable/ic_check_box_outline_blank_black_24dp" />
 
         <TextView
-            android:id="@+id/tvstu_name"
+            android:id="@+id/tvstud_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/tvorder"

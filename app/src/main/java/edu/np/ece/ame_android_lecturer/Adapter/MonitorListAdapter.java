@@ -49,14 +49,16 @@ public class MonitorListAdapter extends ArrayAdapter {
             holder=new MonitorListAdapter.Holder();
             holder.tvcard=(TextView)row.findViewById(R.id.tvstu_card);
             holder.tvorder=(TextView)row.findViewById(R.id.tvorder);
-            holder.tvstu_name=(TextView)row.findViewById(R.id.tvstu_name);
+            holder.tvstu_name=(TextView)row.findViewById(R.id.tvstud_name);
             holder.imgcheckbox=(ImageView)row.findViewById(R.id.imgCheckbox);
+            row.setTag(holder);
         }
         else {
             holder=(MonitorListAdapter.Holder)row.getTag();
         }
         holder.tvstu_name.setText(data.get(position).getStudent_id()); //now showing the student_id
-      //  holder.tvcard.setText(data.get(position));
+        holder.tvcard.setText(data.get(position).getStatus());
+        holder.tvorder.setText(String.valueOf(position));
         status=data.get(position).getStatus();
         if(status.equals("-1")){
             //absent

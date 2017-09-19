@@ -14,7 +14,10 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import edu.np.ece.ame_android_lecturer.Adapter.MonitorListAdapter;
@@ -76,6 +79,8 @@ public class MonitorListFragment extends Fragment {
     public void initStudentlist(){
         final ListView listView = (ListView) myView.findViewById(R.id.monitorlist);
 
+        //把stu_id按照递增排序
+        Collections.reverse(attendanceStatusList);
 
         MonitorListAdapter monitorListAdapter = new MonitorListAdapter(getActivity(),R.layout.item_monitor_list,attendanceStatusList);
         listView.setAdapter(monitorListAdapter);
@@ -83,17 +88,27 @@ public class MonitorListFragment extends Fragment {
 
     }
 
+   
     public void listAttendance(){
         Preferences.showLoading(getActivity(), "Live Attendance Monitor", "Loading data from server...");
         try {
             SharedPreferences pref = getActivity().getSharedPreferences(Preferences.SharedPreferencesTag, Preferences.SharedPreferences_ModeTag);
             String auCode = pref.getString("authorizationCode", null);
 
+
+            /*JsonParser parser = new JsonParser();
+            lesson_date_id="32277";
+            JsonObject object=parser.parse("{" +
+                    "\"lesson_date_id\":\""+lesson_date_id+"\""+ "}").getAsJsonObject();*/
+
+            JsonObject object=new JsonObject();
+            lesson_date_id="32277";
+
+            object.addProperty("lesson_date_id",lesson_date_id);
+
+            // 需要输入当前课的lesson_date_id
             ServerApi client = ServiceGenerator.createService(ServerApi.class, auCode);
-            JsonObject toUp = new JsonObject();
-            lesson_date_id="31476";
-            toUp.addProperty("lesson_date_id",lesson_date_id);// 需要输入当前课的lesson_date_id
-            Call<List<ListAttendanceStatus>> call=client.getStudentAttendanceStatus(toUp);
+            Call<List<ListAttendanceStatus>> call=client.getStudentAttendanceStatus(object);
             call.enqueue(new ServerCallBack<List<ListAttendanceStatus>>() {
                 @Override
                 public void onResponse(Call<List<ListAttendanceStatus>> call, Response<List<ListAttendanceStatus>> response) {
@@ -121,6 +136,7 @@ public class MonitorListFragment extends Fragment {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    Preferences.dismissLoading();
 
                 }
             });
@@ -133,7 +149,7 @@ public class MonitorListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         myView= inflater.inflate(R.layout.fragment_monitor_list, container, false);
-
+        listAttendance();
         return myView;
     }
 
