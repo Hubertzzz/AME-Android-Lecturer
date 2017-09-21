@@ -23,6 +23,7 @@ import java.util.List;
 import edu.np.ece.ame_android_lecturer.Adapter.MonitorListAdapter;
 import edu.np.ece.ame_android_lecturer.LogInActivity;
 import edu.np.ece.ame_android_lecturer.Model.ListAttendanceStatus;
+import edu.np.ece.ame_android_lecturer.Model.StudentInfo;
 import edu.np.ece.ame_android_lecturer.Preferences;
 import edu.np.ece.ame_android_lecturer.R;
 import edu.np.ece.ame_android_lecturer.Retrofit.ServerApi;
@@ -44,6 +45,8 @@ public class MonitorListFragment extends Fragment {
     private View myView;
     private String lesson_date_id;
     private List<ListAttendanceStatus> attendanceStatusList;
+    private String lesson_id;
+    private List<StudentInfo> studentList;
 
     public MonitorListFragment() {
         // Required empty public constructor
@@ -76,25 +79,78 @@ public class MonitorListFragment extends Fragment {
         }
     }
 
-    public void initStudentlist(){
-        final ListView listView = (ListView) myView.findViewById(R.id.monitorlist);
+    public void initAttendanceList(){
 
+        //get lesson_id
+        lesson_id=attendanceStatusList.get(0).getLesson().getId();
         //把stu_id按照递增排序
         Collections.reverse(attendanceStatusList);
-
-        MonitorListAdapter monitorListAdapter = new MonitorListAdapter(getActivity(),R.layout.item_monitor_list,attendanceStatusList);
-        listView.setAdapter(monitorListAdapter);
-        monitorListAdapter.notifyDataSetChanged();
+        listStudent();
 
     }
 
-   
+    public void initStudentlist(){
+        final ListView listView = (ListView) myView.findViewById(R.id.monitorlist);
+        MonitorListAdapter monitorListAdapter = new MonitorListAdapter(getActivity(),R.layout.item_monitor_list,attendanceStatusList,studentList);
+        listView.setAdapter(monitorListAdapter);
+        monitorListAdapter.notifyDataSetChanged();
+    }
+
+
+    public void listStudent(){
+        try {
+            SharedPreferences pref = getActivity().getSharedPreferences(Preferences.SharedPreferencesTag, Preferences.SharedPreferences_ModeTag);
+            String auCode = pref.getString("authorizationCode", null);
+            ServerApi client = ServiceGenerator.createService(ServerApi.class, auCode);
+            JsonObject toUp = new JsonObject();
+            toUp.addProperty("lesson_id",lesson_id);
+
+            Call<List<StudentInfo>> call = client.getStudentList(toUp);
+            call.enqueue(new ServerCallBack<List<StudentInfo>>() {
+                @Override
+                public void onResponse(Call<List<StudentInfo>> call, Response<List<StudentInfo>> response) {
+                    Preferences.dismissLoading();
+                    try {
+                        studentList=response.body();
+                        if(studentList==null){
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setTitle("ERROR");
+                            builder.setMessage("Cannot find student list");
+                            builder.setPositiveButton("OK",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(final DialogInterface dialogInterface, final int i) {
+                                            Preferences.clearLecturerInfo();
+                                            Intent intent = new Intent(getActivity(), LogInActivity.class);
+                                            startActivity(intent);
+                                            getActivity().finish();
+                                        }
+                                    });
+                            builder.create().show();
+                        }
+                        else {
+                            initStudentlist();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
     public void listAttendance(){
         Preferences.showLoading(getActivity(), "Live Attendance Monitor", "Loading data from server...");
         try {
             SharedPreferences pref = getActivity().getSharedPreferences(Preferences.SharedPreferencesTag, Preferences.SharedPreferences_ModeTag);
             String auCode = pref.getString("authorizationCode", null);
-
 
             /*JsonParser parser = new JsonParser();
             lesson_date_id="32277";
@@ -102,11 +158,12 @@ public class MonitorListFragment extends Fragment {
                     "\"lesson_date_id\":\""+lesson_date_id+"\""+ "}").getAsJsonObject();*/
 
             JsonObject object=new JsonObject();
+            // 需要输入当前课的lesson_date_id
             lesson_date_id="32277";
 
             object.addProperty("lesson_date_id",lesson_date_id);
 
-            // 需要输入当前课的lesson_date_id
+
             ServerApi client = ServiceGenerator.createService(ServerApi.class, auCode);
             Call<List<ListAttendanceStatus>> call=client.getStudentAttendanceStatus(object);
             call.enqueue(new ServerCallBack<List<ListAttendanceStatus>>() {
@@ -131,7 +188,7 @@ public class MonitorListFragment extends Fragment {
                             builder.create().show();
                         }
                         else {
-                            initStudentlist();
+                            initAttendanceList();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

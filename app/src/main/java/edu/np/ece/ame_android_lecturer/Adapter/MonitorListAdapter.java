@@ -14,6 +14,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import edu.np.ece.ame_android_lecturer.Model.ListAttendanceStatus;
+import edu.np.ece.ame_android_lecturer.Model.StudentInfo;
 import edu.np.ece.ame_android_lecturer.R;
 
 /**
@@ -24,13 +25,15 @@ public class MonitorListAdapter extends ArrayAdapter {
     Context context;
     int layoutResourceId;
     List<ListAttendanceStatus> data;
+    List<StudentInfo> studentInfos;
     String status;
 
-    public MonitorListAdapter( Context context, int layoutResourceId ,  List<ListAttendanceStatus> data) {
+    public MonitorListAdapter(Context context, int layoutResourceId , List<ListAttendanceStatus> data, List<StudentInfo> studentInfos) {
         super(context, layoutResourceId, data);
         this.context=context;
         this.layoutResourceId=layoutResourceId;
         this.data=data;
+        this.studentInfos=studentInfos;
 
     }
 
@@ -56,8 +59,8 @@ public class MonitorListAdapter extends ArrayAdapter {
         else {
             holder=(MonitorListAdapter.Holder)row.getTag();
         }
-        holder.tvstu_name.setText(data.get(position).getStudent_id()); //now showing the student_id
-        holder.tvcard.setText(data.get(position).getStatus());
+        holder.tvstu_name.setText(studentInfos.get(position).getName()); //now showing the student_id
+        holder.tvcard.setText(studentInfos.get(position).getCard());
         holder.tvorder.setText(String.valueOf(position));
         status=data.get(position).getStatus();
         if(status.equals("-1")){
