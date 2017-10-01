@@ -52,6 +52,9 @@ public interface ServerApi {
     @POST("timetable/get-student")
     Call<List<StudentInfo>> getStudentList(@Body JsonObject lesson_id);
 
+    @POST("attendance/update-status")
+    Call<String> updateStatus(@Body JsonObject toUp);
+
 
 
 
