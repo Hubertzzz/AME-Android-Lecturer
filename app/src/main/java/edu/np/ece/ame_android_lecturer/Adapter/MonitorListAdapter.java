@@ -75,6 +75,22 @@ public class MonitorListAdapter extends ArrayAdapter {
             //late
             holder.imgcheckbox.setImageResource(R.drawable.ic_check_box_black_24dp);
         }
+
+
+        /*holder.imgcheckbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(status.equals("-1")){
+                    //current absent & change to attend
+                     status="0";
+                }
+                else {
+                    //current attend & change to absent
+                    status="-1";
+                }
+                notifyDataSetChanged();
+            }
+        });*/
         return row;
     }
 

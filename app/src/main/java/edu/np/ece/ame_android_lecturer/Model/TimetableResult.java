@@ -33,7 +33,7 @@ public class TimetableResult {
 
     @SerializedName("lesson_date")
     @Expose
-    private LessonDate lesson_date;
+    private List<LessonDate> lesson_date;
 
     @SerializedName("beacon_lesson")
     @Expose
@@ -84,11 +84,11 @@ public class TimetableResult {
         this.beacon_lesson = beacon_lesson;
     }
 
-    public LessonDate getLesson_date() {
+    public List<LessonDate> getLesson_date() {
         return lesson_date;
     }
 
-    public void setLesson_date(LessonDate lesson_date) {
+    public void setLesson_date(List<LessonDate> lesson_date) {
         this.lesson_date = lesson_date;
     }
 }
