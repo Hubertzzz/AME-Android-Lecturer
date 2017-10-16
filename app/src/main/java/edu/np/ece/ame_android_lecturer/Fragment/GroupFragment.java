@@ -108,7 +108,7 @@ public class GroupFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
                 Intent intent = new Intent(getActivity(), StudentListActivity.class);
                 intent.putExtra("Group_name",timetableList.get(i).getLesson().getClass_section());
-                intent.putExtra("lesson_id",timetableList.get(i).getLesson_id());
+                intent.putExtra("lesson_id",timetableList.get(i).getLesson_id()); //用的intent传递数据
                 startActivity(intent);
                 Toast.makeText(getActivity().getBaseContext(),timetableList.get(i).getLesson_id(),Toast.LENGTH_SHORT).show();
             }

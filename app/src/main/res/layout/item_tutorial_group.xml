@@ -27,13 +27,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
-                    android:text="ELECTRIC 2ELTECH"
-                    android:textAlignment="textEnd"
-                    android:textAppearance="@android:style/TextAppearance.Holo.Widget.TextView"
-                    android:textSize="20sp"
-                    android:layout_marginStart="98dp"
                     android:layout_alignParentTop="true"
-                    android:layout_toEndOf="@+id/tvgroup" />
+                    android:layout_marginStart="98dp"
+                    android:layout_toEndOf="@+id/tvgroup"
+                    android:text="ELECTRIC 2ELTECH"
+                    android:textAlignment="viewStart"
+                    android:textAppearance="@android:style/TextAppearance.Holo.Widget.TextView"
+                    android:textSize="20sp" />
 
         </RelativeLayout>
 </RelativeLayout>

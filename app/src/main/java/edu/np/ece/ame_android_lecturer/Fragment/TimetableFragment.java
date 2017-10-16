@@ -55,6 +55,8 @@ public class TimetableFragment extends Fragment {
 
     private List<Integer> itemType = new ArrayList<>();
 
+    private List<LessonDate> lessonDatesResult=new ArrayList<>();
+    private List<LessonDate> lessonDateList=new ArrayList<>();
 
 
     public TimetableFragment() {
@@ -85,29 +87,42 @@ public class TimetableFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(dateFormat.format(calendar.getTime()));
     }
 
-    private boolean isOnDifferentDate(TimetableResult temp1, TimetableResult temp2) {
-        if (temp1.getLesson_date().getLdate().compareToIgnoreCase(temp2.getLesson_date().getLdate()) == 0) {
+    private boolean isOnDifferentDate(LessonDate temp1, LessonDate temp2) {
+
+        if (temp1.getLdate().compareToIgnoreCase(temp2.getLdate()) == 0) {
             return false;
         }
         return true;
     }
-    private void addItem(TimetableResult subject, Integer type) {
+    private void addItem(TimetableResult subject,LessonDate date, Integer type) {
         data.add(subject);
+        lessonDateList.add(date);
         itemType.add(type);
     }
+
 
     private void initTimetableList() {
         try {
             final ListView listView = (ListView) myView.findViewById(R.id.timetable_list);
+
             for (int i = 0; i <timetableList.size(); i++) {
-                if (i == 0 || isOnDifferentDate(timetableList.get(i), timetableList.get(i - 1))) {
-                    addItem(timetableList.get(i), Preferences.LIST_ITEM_TYPE_1);
+                lessonDatesResult=timetableList.get(i).getLesson_date();
+                /*for(int n=0;n<lessonDatesResult.size();n++){
+                    if (i == 0 || isOnDifferentDate(lessonDatesResult.get(n), lessonDatesResult.get(n - 1))) {
+                        addItem(timetableList.get(i),lessonDatesResult.get(n), Preferences.LIST_ITEM_TYPE_1);
+                    }
+                    addItem(timetableList.get(i),lessonDatesResult.get(n), Preferences.LIST_ITEM_TYPE_2);
+                }*/
+
+                if (i == 0 || isOnDifferentDate(timetableList.get(i).getLesson_date().get(i), timetableList.get(i - 1).getLesson_date().get(i))) {
+                    addItem(timetableList.get(i),timetableList.get(i).getLesson_date().get(i), Preferences.LIST_ITEM_TYPE_1);
                 }
-                addItem(timetableList.get(i), Preferences.LIST_ITEM_TYPE_2);
+                addItem(timetableList.get(i),timetableList.get(i).getLesson_date().get(i), Preferences.LIST_ITEM_TYPE_2);
+
             }
 
 
-            TimetableListAdapter adapter = new TimetableListAdapter(context, R.layout.item_subject, R.layout.item_week_day,data,itemType);
+            TimetableListAdapter adapter = new TimetableListAdapter(context, R.layout.item_subject, R.layout.item_week_day,data,lessonDateList,itemType);
             listView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
 

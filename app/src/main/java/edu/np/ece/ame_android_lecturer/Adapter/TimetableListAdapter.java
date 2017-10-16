@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import edu.np.ece.ame_android_lecturer.Model.LessonDate;
 import edu.np.ece.ame_android_lecturer.Model.TimetableResult;
 import edu.np.ece.ame_android_lecturer.Preferences;
 import edu.np.ece.ame_android_lecturer.R;
@@ -25,13 +26,15 @@ public class TimetableListAdapter extends ArrayAdapter<TimetableResult> {
     int layoutSeparatorId;
     List<TimetableResult> data;
     List<Integer> dataType;
+    List<LessonDate> lessonDateList;
 
-    public TimetableListAdapter(Context context, int layoutResourceId, int layoutSeparatorId, List<TimetableResult> data, List<Integer> dataType) {
+    public TimetableListAdapter(Context context, int layoutResourceId, int layoutSeparatorId, List<TimetableResult> data,List<LessonDate> lessonDateList, List<Integer> dataType) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.layoutSeparatorId = layoutSeparatorId;
         this.context = context;
         this.data = data;
+        this.lessonDateList=lessonDateList;
         this.dataType = dataType;
     }
 
@@ -99,7 +102,8 @@ public class TimetableListAdapter extends ArrayAdapter<TimetableResult> {
             switch (itemType) {
                 //Put data into layout for display weekday
                 case Preferences.LIST_ITEM_TYPE_1:
-                    separatorHolder.tvWeekDay.setText(subject.getLesson_date().getDate());
+                    separatorHolder.tvWeekDay.setText(lessonDateList.get(position).getDate());
+                  //  separatorHolder.tvWeekDay.setText(subject.getLesson_date().getDate());
                     break;
 
                 //Put data into layout for display Subject
