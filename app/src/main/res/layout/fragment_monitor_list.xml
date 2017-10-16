@@ -1,13 +1,38 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="edu.np.ece.ame_android_lecturer.Fragment.MonitorListFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="monitor" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/tvlesson_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="11dp"
+        android:text="ELECTRIC 2ELTECH"
+        android:textAppearance="@android:style/TextAppearance.Material.Large" />
+
+    <TextView
+        android:id="@+id/tvclass_section"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvlesson_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="11dp"
+        android:text="L1B2"
+        android:textAppearance="@android:style/TextAppearance.Material.Large"
+        android:textSize="18sp" />
+
+    <ListView
+        android:id="@+id/monitorlist"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tvclass_section"
+        android:layout_marginTop="15dp"
+        android:divider="@color/divider"
+        android:dividerHeight="1px"/>
+</RelativeLayout>

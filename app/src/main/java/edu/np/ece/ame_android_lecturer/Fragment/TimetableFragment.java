@@ -24,6 +24,7 @@ import java.util.List;
 
 import edu.np.ece.ame_android_lecturer.Adapter.TimetableListAdapter;
 import edu.np.ece.ame_android_lecturer.LogInActivity;
+import edu.np.ece.ame_android_lecturer.Model.LessonDate;
 import edu.np.ece.ame_android_lecturer.Model.TimetableResult;
 import edu.np.ece.ame_android_lecturer.NavigationActivity;
 import edu.np.ece.ame_android_lecturer.Preferences;
@@ -85,9 +86,9 @@ public class TimetableFragment extends Fragment {
     }
 
     private boolean isOnDifferentDate(TimetableResult temp1, TimetableResult temp2) {
-       /* if (temp1.getLesson_date().getLdate().compareToIgnoreCase(temp2.getLesson_date().getLdate()) == 0) {
+        if (temp1.getLesson_date().getLdate().compareToIgnoreCase(temp2.getLesson_date().getLdate()) == 0) {
             return false;
-        }*/
+        }
         return true;
     }
     private void addItem(TimetableResult subject, Integer type) {
@@ -98,7 +99,6 @@ public class TimetableFragment extends Fragment {
     private void initTimetableList() {
         try {
             final ListView listView = (ListView) myView.findViewById(R.id.timetable_list);
-
             for (int i = 0; i <timetableList.size(); i++) {
                 if (i == 0 || isOnDifferentDate(timetableList.get(i), timetableList.get(i - 1))) {
                     addItem(timetableList.get(i), Preferences.LIST_ITEM_TYPE_1);
@@ -106,7 +106,8 @@ public class TimetableFragment extends Fragment {
                 addItem(timetableList.get(i), Preferences.LIST_ITEM_TYPE_2);
             }
 
-            TimetableListAdapter adapter = new TimetableListAdapter(context, R.layout.item_subject, R.layout.item_week_day, data, itemType);
+
+            TimetableListAdapter adapter = new TimetableListAdapter(context, R.layout.item_subject, R.layout.item_week_day,data,itemType);
             listView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
 

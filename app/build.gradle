@@ -49,6 +49,12 @@ dependencies {
     compile 'com.android.support:support-v4:25.+'
 }
 dependencies {
+    compile 'com.android.support.constraint:constraint-layout:+'
+}
+dependencies {
+    compile 'com.android.support:support-v4:25.+'
+}
+dependencies {
     compile 'com.j256.ormlite:ormlite-android:5.0'
     compile 'com.j256.ormlite:ormlite-core:5.0'
     compile 'com.j256.ormlite:ormlite-jdbc:5.0'
@@ -56,7 +62,19 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.squareup.okhttp:okhttp:2.4.0'
-    compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+}
+dependencies {
+    compile 'com.android.support:support-v4:25.+'
+}
+dependencies {
+    compile 'com.ogaclejapan.smarttablayout:library:1.6.1@aar'
+
+    //Optional: see how to use the utility.
+    compile 'com.ogaclejapan.smarttablayout:utils-v4:1.6.1@aar'
+
+    //Optional: see how to use the utility.
+    compile 'com.ogaclejapan.smarttablayout:utils-v13:1.6.1@aar'
 }

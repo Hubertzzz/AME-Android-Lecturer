@@ -24,9 +24,9 @@ public class ListAttendanceStatus {
     @Expose
     private String recorded_time;
 
-    @SerializedName("lecturer_id")
+    /*@SerializedName("lecturer_id")
     @Expose
-    private String lecturer_id;
+    private String lecturer_id;*/
 
     @SerializedName("status")
     @Expose
@@ -72,14 +72,14 @@ public class ListAttendanceStatus {
         this.recorded_time = recorded_time;
     }
 
-    public String getLecturer_id() {
+  /*  public String getLecturer_id() {
         return lecturer_id;
     }
 
     public void setLecturer_id(String lecturer_id) {
         this.lecturer_id = lecturer_id;
     }
-
+*/
     public String getStatus() {
         return status;
     }

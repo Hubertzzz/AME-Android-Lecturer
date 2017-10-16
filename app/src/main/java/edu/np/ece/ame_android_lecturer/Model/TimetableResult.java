@@ -35,9 +35,9 @@ public class TimetableResult {
     @Expose
     private LessonDate lesson_date;
 
-    @SerializedName("beaconLesson")
+    @SerializedName("beacon_lesson")
     @Expose
-    private LessonBeacon lessonBeacon;
+    private LessonBeacon beacon_lesson;
 
 
     public String getId() {
@@ -68,14 +68,6 @@ public class TimetableResult {
         this.lesson = lesson;
     }
 
-    public LessonDate getLesson_date() {
-        return lesson_date;
-    }
-
-    public void setLesson_date(LessonDate lesson_date) {
-        this.lesson_date = lesson_date;
-    }
-
     public Venue getVenue() {
         return venue;
     }
@@ -85,15 +77,18 @@ public class TimetableResult {
     }
 
     public LessonBeacon getLessonBeacon() {
-        return lessonBeacon;
+        return beacon_lesson;
     }
 
-    public void setLessonBeacon(LessonBeacon lessonBeacon) {
-        this.lessonBeacon = lessonBeacon;
+    public void setLessonBeacon(LessonBeacon beacon_lesson) {
+        this.beacon_lesson = beacon_lesson;
     }
 
+    public LessonDate getLesson_date() {
+        return lesson_date;
+    }
 
-
-
-
+    public void setLesson_date(LessonDate lesson_date) {
+        this.lesson_date = lesson_date;
+    }
 }

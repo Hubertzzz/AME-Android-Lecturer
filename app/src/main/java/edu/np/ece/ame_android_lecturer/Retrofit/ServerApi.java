@@ -8,9 +8,11 @@ import com.google.gson.JsonObject;
 import java.util.List;
 
 import edu.np.ece.ame_android_lecturer.Model.DateOfaLesson;
+import edu.np.ece.ame_android_lecturer.Model.LessonDate;
 import edu.np.ece.ame_android_lecturer.Model.ListAttendanceStatus;
 import edu.np.ece.ame_android_lecturer.Model.LoginInfo;
 import edu.np.ece.ame_android_lecturer.Model.LoginResult;
+import edu.np.ece.ame_android_lecturer.Model.StudentInfo;
 import edu.np.ece.ame_android_lecturer.Model.TimetableResult;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -42,11 +44,18 @@ public interface ServerApi {
     Call<List<TimetableResult>> getTimetableCurrentWeek(@Query("expand") String expand);
 
     @GET("lesson-date/search")
-    Call<List<DateOfaLesson>> getAllDateOfaLesson(@Query("lesson_id") String lesson_id);
+    Call<List<LessonDate>> getAllDateOfaLesson(@Query("lesson_id") String lesson_id);
 
     @POST("attendance/list-attendance-status-by-lecturer")
-    Call<List<ListAttendanceStatus>> getStudentAttendanceStatus(@Body String lesson_date_id);
+    Call<List<ListAttendanceStatus>> getStudentAttendanceStatus(@Body JsonObject lesson_date_id);
 
-    
+    @POST("timetable/get-student")
+    Call<List<StudentInfo>> getStudentList(@Body JsonObject lesson_id);
+
+    @POST("attendance/update-status")
+    Call<String> updateStatus(@Body JsonObject toUp);
+
+
+
 
 }
