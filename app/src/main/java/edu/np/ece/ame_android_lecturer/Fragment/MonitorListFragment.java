@@ -54,6 +54,7 @@ public class MonitorListFragment extends Fragment {
     private String student_id;
     private String status;
     private String student_name;
+    MonitorListAdapter monitorListAdapter;
 
 
     public MonitorListFragment() {
@@ -99,7 +100,7 @@ public class MonitorListFragment extends Fragment {
 
     public void initStudentlist(){
         final ListView listView = (ListView) myView.findViewById(R.id.monitorlist);
-        MonitorListAdapter monitorListAdapter = new MonitorListAdapter(getActivity(),R.layout.item_monitor_list,attendanceStatusList,studentList);
+        monitorListAdapter = new MonitorListAdapter(getActivity(),R.layout.item_monitor_list,attendanceStatusList,studentList);
         listView.setAdapter(monitorListAdapter);
         monitorListAdapter.notifyDataSetChanged();
 
@@ -111,7 +112,8 @@ public class MonitorListFragment extends Fragment {
                 student_name=studentList.get(position).getName();
                 status=attendanceStatusList.get(position).getStatus();
                 updateStatus();
-                Toast.makeText(getActivity().getBaseContext(),attendanceStatusList.get(position).getStudent_id(),Toast.LENGTH_SHORT).show();
+
+               // Toast.makeText(getActivity().getBaseContext(),attendanceStatusList.get(position).getStudent_id(),Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -141,11 +143,12 @@ public class MonitorListFragment extends Fragment {
                     if(response.body().contains("success")){
                         //get new status & student id
                         if(status.equals("1")){
-                            Toast.makeText(getActivity().getBaseContext(),"Update attendance status of Student"+student_name+"to Present Successfully",Toast.LENGTH_SHORT).show();
-                            
+                            Toast.makeText(getActivity().getBaseContext(),"Update attendance status of Student "+student_name+" to Present Successfully",Toast.LENGTH_SHORT).show();
+
                         }
                         if(status.equals("0")){
-                            Toast.makeText(getActivity().getBaseContext(),"Update attendance status of Student"+student_name+"to Absent Successfully",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity().getBaseContext(),"Update attendance status of Student "+student_name+" to Absent Successfully",Toast.LENGTH_SHORT).show();
+
                         }
 
 
@@ -204,7 +207,7 @@ public class MonitorListFragment extends Fragment {
                                         @Override
                                         public void onClick(final DialogInterface dialogInterface, final int i) {
                                             Preferences.clearLecturerInfo();
-                                            Intent intent = new Intent(getActivity(), LogInActivity.class);
+                                            Intent intent = new Intent(getActivity(), NavigationActivity.class);
                                             startActivity(intent);
                                             getActivity().finish();
                                         }

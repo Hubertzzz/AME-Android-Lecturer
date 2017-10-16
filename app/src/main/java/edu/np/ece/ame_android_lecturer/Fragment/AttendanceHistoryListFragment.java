@@ -1,17 +1,31 @@
 package edu.np.ece.ame_android_lecturer.Fragment;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Spinner;
 
+import com.google.gson.JsonObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
+import edu.np.ece.ame_android_lecturer.Adapter.MonitorListAdapter;
+import edu.np.ece.ame_android_lecturer.LogInActivity;
 import edu.np.ece.ame_android_lecturer.Model.LessonDate;
+import edu.np.ece.ame_android_lecturer.Model.ListAttendanceStatus;
+import edu.np.ece.ame_android_lecturer.NavigationActivity;
 import edu.np.ece.ame_android_lecturer.Preferences;
 import edu.np.ece.ame_android_lecturer.R;
 import edu.np.ece.ame_android_lecturer.Retrofit.ServerApi;
@@ -33,7 +47,11 @@ public class AttendanceHistoryListFragment extends Fragment {
     private View myView;
     private String lesson_id;
     private List<LessonDate> dateList;
-
+    private List<String> ldatelist=new ArrayList<>();
+    private ArrayAdapter<String> arrayAdapter;
+    MonitorListAdapter monitorListAdapter;
+    private  String lesson_date_id;
+    private List<ListAttendanceStatus> attendanceStatusList;
 
     public AttendanceHistoryListFragment() {
         // Required empty public constructor
@@ -66,15 +84,90 @@ public class AttendanceHistoryListFragment extends Fragment {
         }
     }
 
-    public void LoadList(){
-        //select timeslot & view history date
-        Bundle arguments = getArguments();
-        if(arguments!=null){
-            lesson_id=arguments.getString("lesson_id");
+    public void initdatelist(){
+        //把得到的datelist中的getldate（）放入dropbox
+       final Spinner spinner=(Spinner)myView.findViewById(R.id.sp_timeslot);
+        for(int i=0;i<dateList.size();i++){
+            ldatelist.add(dateList.get(i).getLdate());
         }
+        arrayAdapter=new ArrayAdapter<String>(getActivity(),R.layout.support_simple_spinner_dropdown_item,ldatelist);
+        arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spinner.setAdapter(arrayAdapter);
+        arrayAdapter.notifyDataSetChanged();
+
+        spinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //show list
+                final ListView listView=(ListView)myView.findViewById(R.id.list_timeslot);
+                lesson_date_id = dateList.get(position).getId();
+                //api call
+                Callhistorylist();
+               // monitorListAdapter=new MonitorListAdapter(getActivity(),R.layout.item_monitor_list,);
+            }
+        });
+
+    }
+    public void Callhistorylist(){
+        Preferences.showLoading(getActivity(), "Attendance List", "Loading data from server...");
         try {
             SharedPreferences pref = getActivity().getSharedPreferences(Preferences.SharedPreferencesTag, Preferences.SharedPreferences_ModeTag);
             String auCode = pref.getString("authorizationCode", null);
+
+            JsonObject object=new JsonObject();
+            object.addProperty("lesson_date_id",lesson_date_id);
+
+            ServerApi client = ServiceGenerator.createService(ServerApi.class, auCode);
+            Call<List<ListAttendanceStatus>> call=client.getStudentAttendanceStatus(object);
+            call.enqueue(new ServerCallBack<List<ListAttendanceStatus>>() {
+                @Override
+                public void onResponse(Call<List<ListAttendanceStatus>> call, Response<List<ListAttendanceStatus>> response) {
+                    try {
+                        attendanceStatusList=response.body();
+                        if(attendanceStatusList==null){
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setTitle("ERROR");
+                            builder.setMessage("Cannot find student list");
+                            builder.setPositiveButton("OK",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(final DialogInterface dialogInterface, final int i) {
+                                            Preferences.clearLecturerInfo();
+                                            Intent intent = new Intent(getActivity(), LogInActivity.class);
+                                            startActivity(intent);
+                                            getActivity().finish();
+                                        }
+                                    });
+                            builder.create().show();
+                        }
+                        else {
+                           //get student list
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    Preferences.dismissLoading();
+
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+    public void LoadList(){
+        //select timeslot & view history date
+
+        Intent i = getActivity().getIntent();
+        lesson_id= i.getStringExtra("lesson_id");
+        /*Bundle arguments = getArguments();
+        if(arguments!=null){
+            lesson_id=arguments.getString("lesson_id");
+        }*/
+        try {
+            SharedPreferences pref = getActivity().getSharedPreferences(Preferences.SharedPreferencesTag, Preferences.SharedPreferences_ModeTag);
+            String auCode = pref.getString("authorizationCode", null);
+
 
             ServerApi client = ServiceGenerator.createService(ServerApi.class, auCode);
             String expand=lesson_id;
@@ -84,6 +177,25 @@ public class AttendanceHistoryListFragment extends Fragment {
                 public void onResponse(Call<List<LessonDate>> call, Response<List<LessonDate>> response) {
                     try {
                         dateList=response.body();
+                        if(dateList==null){
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setTitle("ERROR");
+                            builder.setMessage("Cannot find date list");
+                            builder.setPositiveButton("OK",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(final DialogInterface dialogInterface, final int i) {
+                                            Preferences.clearLecturerInfo();
+                                            Intent intent = new Intent(getActivity(), NavigationActivity.class);
+                                            startActivity(intent);
+                                            getActivity().finish();
+                                        }
+                                    });
+                            builder.create().show();
+                        }else {
+                            initdatelist();
+
+                        }
 
                     } catch (Exception e) {
                         e.printStackTrace();
