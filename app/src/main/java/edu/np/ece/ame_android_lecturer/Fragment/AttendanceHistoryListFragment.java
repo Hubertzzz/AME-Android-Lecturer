@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 
@@ -25,6 +26,7 @@ import edu.np.ece.ame_android_lecturer.Adapter.MonitorListAdapter;
 import edu.np.ece.ame_android_lecturer.LogInActivity;
 import edu.np.ece.ame_android_lecturer.Model.LessonDate;
 import edu.np.ece.ame_android_lecturer.Model.ListAttendanceStatus;
+import edu.np.ece.ame_android_lecturer.Model.StudentInfo;
 import edu.np.ece.ame_android_lecturer.NavigationActivity;
 import edu.np.ece.ame_android_lecturer.Preferences;
 import edu.np.ece.ame_android_lecturer.R;
@@ -32,6 +34,7 @@ import edu.np.ece.ame_android_lecturer.Retrofit.ServerApi;
 import edu.np.ece.ame_android_lecturer.Retrofit.ServerCallBack;
 import edu.np.ece.ame_android_lecturer.Retrofit.ServiceGenerator;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 
@@ -52,6 +55,11 @@ public class AttendanceHistoryListFragment extends Fragment {
     MonitorListAdapter monitorListAdapter;
     private  String lesson_date_id;
     private List<ListAttendanceStatus> attendanceStatusList;
+
+    private List<StudentInfo> studentList;
+    private String student_id;
+    private String status;
+    private String student_name;
 
     public AttendanceHistoryListFragment() {
         // Required empty public constructor
@@ -95,17 +103,23 @@ public class AttendanceHistoryListFragment extends Fragment {
         spinner.setAdapter(arrayAdapter);
         arrayAdapter.notifyDataSetChanged();
 
-        spinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //show list
-                final ListView listView=(ListView)myView.findViewById(R.id.list_timeslot);
+                // final ListView listView=(ListView)myView.findViewById(R.id.list_timeslot);
                 lesson_date_id = dateList.get(position).getId();
                 //api call
                 Callhistorylist();
-               // monitorListAdapter=new MonitorListAdapter(getActivity(),R.layout.item_monitor_list,);
+                // monitorListAdapter=new MonitorListAdapter(getActivity(),R.layout.item_monitor_list,);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
+
 
     }
     public void Callhistorylist(){
@@ -142,6 +156,8 @@ public class AttendanceHistoryListFragment extends Fragment {
                         }
                         else {
                            //get student list
+
+                            listStudent();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -155,6 +171,138 @@ public class AttendanceHistoryListFragment extends Fragment {
         }
 
     }
+    public void listStudent(){
+
+        try {
+            SharedPreferences pref = getActivity().getSharedPreferences(Preferences.SharedPreferencesTag, Preferences.SharedPreferences_ModeTag);
+            String auCode = pref.getString("authorizationCode", null);
+            ServerApi client = ServiceGenerator.createService(ServerApi.class, auCode);
+            JsonObject toUp = new JsonObject();
+            toUp.addProperty("lesson_id",lesson_id);
+
+            Call<List<StudentInfo>> call = client.getStudentList(toUp);
+            call.enqueue(new ServerCallBack<List<StudentInfo>>() {
+                @Override
+                public void onResponse(Call<List<StudentInfo>> call, Response<List<StudentInfo>> response) {
+                    Preferences.dismissLoading();
+                    try {
+                        studentList=response.body();
+                        if(studentList==null){
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setTitle("ERROR");
+                            builder.setMessage("Cannot find student list");
+                            builder.setPositiveButton("OK",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(final DialogInterface dialogInterface, final int i) {
+                                            Preferences.clearLecturerInfo();
+                                            Intent intent = new Intent(getActivity(), NavigationActivity.class);
+                                            startActivity(intent);
+                                            getActivity().finish();
+                                        }
+                                    });
+                            builder.create().show();
+                        }
+                        else {
+                            initStudentlist();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void initStudentlist(){
+        final ListView listView = (ListView) myView.findViewById(R.id.list_timeslot);
+        monitorListAdapter = new MonitorListAdapter(getActivity(),R.layout.item_monitor_list,attendanceStatusList,studentList);
+        listView.setAdapter(monitorListAdapter);
+        monitorListAdapter.notifyDataSetChanged();
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //得到所点击的student id
+                student_id=attendanceStatusList.get(position).getStudent_id();
+                student_name=studentList.get(position).getName();
+                status=attendanceStatusList.get(position).getStatus();
+                updateStatus();
+
+                Toast.makeText(getActivity().getBaseContext(),attendanceStatusList.get(position).getStudent_id(),Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void updateStatus(){
+        try {
+            SharedPreferences pref = getActivity().getSharedPreferences(Preferences.SharedPreferencesTag, Preferences.SharedPreferences_ModeTag);
+            String auCode = pref.getString("authorizationCode", null);
+
+            ServerApi client = ServiceGenerator.createService(ServerApi.class, auCode);
+            JsonObject toUp = new JsonObject();
+            toUp.addProperty("lesson_date_id",lesson_date_id);
+            toUp.addProperty("student_id",student_id);
+            if(status.equals("-1")){
+                toUp.addProperty("status",0);
+            }
+            if(status.equals("0")){
+                toUp.addProperty("status",-1);
+            }
+            //toggle status (需要给status 复制 现在为空)
+
+            Call<String> call=client.updateStatus(toUp);
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    if(response.body().contains("success")){
+                        //get new status & student id
+                        if(status.equals("1")){
+                            Toast.makeText(getActivity().getBaseContext(),"Update attendance status of Student "+student_name+" to Present Successfully",Toast.LENGTH_SHORT).show();
+
+                        }
+                        if(status.equals("0")){
+                            Toast.makeText(getActivity().getBaseContext(),"Update attendance status of Student "+student_name+" to Absent Successfully",Toast.LENGTH_SHORT).show();
+
+                        }
+
+
+
+                    }else if(response.body().contains("failed")){
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setTitle("Failed");
+                        builder.setMessage("Update attendance failed.");
+                        builder.setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(final DialogInterface dialogInterface, final int i) {
+                                        Preferences.clearLecturerInfo();
+                                        Intent intent = new Intent(getActivity(), NavigationActivity.class);
+                                        startActivity(intent);
+                                        getActivity().finish();
+                                    }
+                                });
+                        builder.create().show();
+                    }
+                    else {
+                        Toast.makeText(getActivity().getBaseContext(),"error",Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void LoadList(){
         //select timeslot & view history date
 
@@ -164,6 +312,7 @@ public class AttendanceHistoryListFragment extends Fragment {
         if(arguments!=null){
             lesson_id=arguments.getString("lesson_id");
         }*/
+
         try {
             SharedPreferences pref = getActivity().getSharedPreferences(Preferences.SharedPreferencesTag, Preferences.SharedPreferences_ModeTag);
             String auCode = pref.getString("authorizationCode", null);
