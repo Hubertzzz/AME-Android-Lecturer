@@ -9,6 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -183,7 +184,12 @@ public class LogInActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<LoginResult> call, Throwable t) {
-                onLoginFailed();
+
+                Preferences.dismissLoading();
+                android.app.AlertDialog alertDialog = new android.app.AlertDialog.Builder(LogInActivity.this).create();
+                alertDialog.setTitle("Login Failed");
+                alertDialog.setMessage("Please check whether you need login while using with public WiFi connection.");
+                // onLoginFailed();
             }
         });
 

@@ -270,6 +270,7 @@ public class AttendanceHistoryListFragment extends Fragment {
 
                         }
 
+                        LoadList();
 
 
                     }else if(response.body().contains("failed")){
