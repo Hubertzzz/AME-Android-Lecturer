@@ -1,5 +1,6 @@
 package edu.np.ece.ame_android_lecturer.Fragment;
 
+import android.app.Notification;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,8 @@ import com.google.gson.JsonParser;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 import edu.np.ece.ame_android_lecturer.Adapter.MonitorListAdapter;
 import edu.np.ece.ame_android_lecturer.LogInActivity;
@@ -86,6 +90,9 @@ public class MonitorListFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
+
     }
 
     public void initAttendanceList(){
@@ -112,7 +119,6 @@ public class MonitorListFragment extends Fragment {
                 student_name=studentList.get(position).getName();
                 status=attendanceStatusList.get(position).getStatus();
                 updateStatus();
-
                // Toast.makeText(getActivity().getBaseContext(),attendanceStatusList.get(position).getStudent_id(),Toast.LENGTH_SHORT).show();
             }
         });
@@ -151,7 +157,7 @@ public class MonitorListFragment extends Fragment {
 
                         }
 
-
+                        listAttendance();
 
                     }else if(response.body().contains("failed")){
                         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
