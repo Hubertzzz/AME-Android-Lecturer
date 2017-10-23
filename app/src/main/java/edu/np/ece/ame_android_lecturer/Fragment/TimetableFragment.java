@@ -24,9 +24,15 @@ import java.util.List;
 
 import edu.np.ece.ame_android_lecturer.Adapter.TimetableListAdapter;
 import edu.np.ece.ame_android_lecturer.LogInActivity;
+import edu.np.ece.ame_android_lecturer.Model.Lesson;
+import edu.np.ece.ame_android_lecturer.Model.LessonBeacon;
 import edu.np.ece.ame_android_lecturer.Model.LessonDate;
 import edu.np.ece.ame_android_lecturer.Model.TimetableResult;
+import edu.np.ece.ame_android_lecturer.Model.Venue;
 import edu.np.ece.ame_android_lecturer.NavigationActivity;
+import edu.np.ece.ame_android_lecturer.OrmLite.DatabaseManager;
+import edu.np.ece.ame_android_lecturer.OrmLite.Subject;
+import edu.np.ece.ame_android_lecturer.OrmLite.SubjectDateTime;
 import edu.np.ece.ame_android_lecturer.Preferences;
 import edu.np.ece.ame_android_lecturer.R;
 import edu.np.ece.ame_android_lecturer.Retrofit.ServerApi;
@@ -168,6 +174,40 @@ public class TimetableFragment extends Fragment {
                         } else {
                             initTimetableList();
 
+                            //clear old data
+                            DatabaseManager.getInstance().deleteAllSubject();
+
+                            //add to DB
+                            for (int i = 0; i < timetableList.size(); i++) {
+                                Subject aSubject = new Subject();
+
+                                aSubject.setLesson_id(timetableList.get(i).getLesson_id());
+                                aSubject.setSubject_area(timetableList.get(i).getLesson().getSubject_area());
+                                aSubject.setCatalog_number(timetableList.get(i).getLesson().getCatalog_number());
+                                aSubject.setLocation(timetableList.get(i).getVenue().getAddress());
+                                aSubject.setUuid(timetableList.get(i).getLessonBeacon().getUuid());
+                                aSubject.setTeacher_id(timetableList.get(i).getLecturer_id());
+
+
+                                aSubject.setClass_section(timetableList.get(i).getLesson().getClass_section());
+
+                                aSubject.setLesson_name(timetableList.get(i).getLesson().getLesson_name());
+                                aSubject.setCredit_unit(timetableList.get(i).getLesson().getCredit_unit());
+
+                                DatabaseManager.getInstance().addSubject(aSubject);
+
+                                SubjectDateTime aSubjectDateTime = DatabaseManager.getInstance().newSubjectDateTimeItem();
+                                aSubjectDateTime.setLesson_date_id(timetableList.get(i).getLesson_date());
+                                aSubjectDateTime.setStartTime(timetableList.get(i).getLesson().getStart_time());
+                                aSubjectDateTime.setEndTime(timetableList.get(i).getLesson().getEnd_time());
+                                aSubjectDateTime.setLesson_date(timetableList.get(i).getLesson_date().get(i).getLdate());
+                                aSubjectDateTime.setSubject(aSubject);
+                                DatabaseManager.getInstance().updateSubjectDateTimeItem(aSubjectDateTime);
+
+
+
+                            }
+
                         }
 
 
@@ -185,12 +225,56 @@ public class TimetableFragment extends Fragment {
                     Preferences.dismissLoading();
                     timetableList = new ArrayList<TimetableResult>();
 
+                    List<Subject> listSubject = DatabaseManager.getInstance().getAllSubjects();
 
+                    //Get data from DB
+                    for (Subject tmp : listSubject) {
+                        for (SubjectDateTime tmp2 : tmp.getSubject_Datetime()) {
+
+                            TimetableResult aTimetableResult = new TimetableResult();
+                            aTimetableResult.setLesson_id(tmp.getLesson_id());
+
+                            Lesson aLesson = new Lesson();
+                            aLesson.setSubject_area(tmp.getSubject_area());
+                            aLesson.setCatalog_number(tmp.getCatalog_number());
+                            aLesson.setStart_time(tmp2.getStartTime());
+                            aLesson.setEnd_time(tmp2.getEndTime());
+                            aTimetableResult.setLesson(aLesson);
+
+                            List<LessonDate> aLessonDate = new ArrayList<LessonDate>();
+
+                            for (int i = 0; i < tmp2.getLesson_date_id().size(); i++) {
+                                aLessonDate.get(i).setId(tmp2.getLesson_date_id().get(i).getId());
+                                aLessonDate.get(i).setLdate(tmp2.getLesson_date());
+                                aLessonDate.get(i).setLesson_id(tmp.getLesson_id());
+
+                            }
+                            aTimetableResult.setLesson_date(aLessonDate);
+
+                            LessonBeacon aLessonBeacon = new LessonBeacon();
+                            aLessonBeacon.setUuid(tmp.getUuid());
+                            aTimetableResult.setLessonBeacon(aLessonBeacon);
+
+                         /*   UserBeacon aLecturerBeacon = new UserBeacon();
+                            aLecturerBeacon.setMajor(tmp.getTeacher_major());
+                            aLecturerBeacon.setMinor(tmp.getTeacher_minor());
+                            aLecturer.setBeacon(aLecturerBeacon);
+                            aTimetableResult.setLecturers(aLecturer);
+                            */
+
+                            Venue aVenue = new Venue();
+                            aVenue.setAddress(tmp.getLocation());
+                            aTimetableResult.setVenue(aVenue);
+
+                            timetableList.add(aTimetableResult);
+
+                        }
+                    }
                     initTimetableList();
 
-                    //BeaconScanActivation.timetableList = timetableList;
-
+                    //   BeaconScanActivation.timetableList = timetableList;
                 }
+
             });
         } catch (Exception e) {
             e.printStackTrace();

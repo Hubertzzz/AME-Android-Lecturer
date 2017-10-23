@@ -3,6 +3,10 @@ package edu.np.ece.ame_android_lecturer.OrmLite;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.util.List;
+
+import edu.np.ece.ame_android_lecturer.Model.LessonDate;
+
 /**
  * Created by MIYA on 19/09/17.
  */
@@ -15,7 +19,7 @@ public class SubjectDateTime {
     private int id;
 
     @DatabaseField
-    private String lesson_date_id;
+    private List<LessonDate> lesson_date_id;
 
     @DatabaseField
     private String startTime;
@@ -42,11 +46,11 @@ public class SubjectDateTime {
         this.id = id;
     }
 
-    public String getLesson_date_id() {
+    public List<LessonDate> getLesson_date_id() {
         return lesson_date_id;
     }
 
-    public void setLesson_date_id(String lesson_date_id) {
+    public void setLesson_date_id(List<LessonDate> lesson_date_id) {
         this.lesson_date_id = lesson_date_id;
     }
 
