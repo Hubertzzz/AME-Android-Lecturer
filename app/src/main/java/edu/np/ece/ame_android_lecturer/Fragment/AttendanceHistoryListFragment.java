@@ -92,33 +92,40 @@ public class AttendanceHistoryListFragment extends Fragment {
         }
     }
 
+
     public void initdatelist(){
         //把得到的datelist中的getldate（）放入dropbox
        final Spinner spinner=(Spinner)myView.findViewById(R.id.sp_timeslot);
         for(int i=0;i<dateList.size();i++){
+
             ldatelist.add(dateList.get(i).getLdate());
+
+
         }
-        arrayAdapter=new ArrayAdapter<String>(getActivity(),R.layout.support_simple_spinner_dropdown_item,ldatelist);
-        arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        spinner.setAdapter(arrayAdapter);
-        arrayAdapter.notifyDataSetChanged();
+        //ldatelist.size() 还没有签到记录的话，spinner里应该什么也不显示
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //show list
-                // final ListView listView=(ListView)myView.findViewById(R.id.list_timeslot);
-                lesson_date_id = dateList.get(position).getId();
-                //api call
-                Callhistorylist();
-                // monitorListAdapter=new MonitorListAdapter(getActivity(),R.layout.item_monitor_list,);
-            }
+            arrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.support_simple_spinner_dropdown_item, ldatelist);
+            arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+            spinner.setAdapter(arrayAdapter);
+            arrayAdapter.notifyDataSetChanged();
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    //show list
+                    // final ListView listView=(ListView)myView.findViewById(R.id.list_timeslot);
+                    lesson_date_id = dateList.get(position).getId();
+                    //api call
+                    Callhistorylist();
+                    // monitorListAdapter=new MonitorListAdapter(getActivity(),R.layout.item_monitor_list,);
+                }
 
-            }
-        });
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
 
 
     }
