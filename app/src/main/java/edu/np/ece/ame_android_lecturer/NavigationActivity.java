@@ -4,17 +4,16 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
 
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
 
+import edu.np.ece.ame_android_lecturer.Fragment.AttendanceTakenFragment;
 import edu.np.ece.ame_android_lecturer.Fragment.GroupFragment;
-import edu.np.ece.ame_android_lecturer.Fragment.LessonNowFragment;
 import edu.np.ece.ame_android_lecturer.Fragment.MonitorListFragment;
 import edu.np.ece.ame_android_lecturer.Fragment.TimetableFragment;
 import edu.np.ece.ame_android_lecturer.Fragment.UserInfoFragment;
@@ -67,7 +66,7 @@ public class NavigationActivity extends AppCompatActivity {
                             break;
                         case R.id.tab_now:
 
-                            fragment = new LessonNowFragment();
+                            fragment = new AttendanceTakenFragment();
                             title = "Lesson Now";
                             getSupportActionBar().setSubtitle(null);
                             break;
@@ -111,7 +110,7 @@ public class NavigationActivity extends AppCompatActivity {
                             getSupportActionBar().setSubtitle(null);
                             break;
                         case R.id.tab_now:
-                            fragment = new LessonNowFragment();
+                            fragment = new AttendanceTakenFragment();
                             title = "Lesson Now";
                             getSupportActionBar().setSubtitle(null);
                             break;

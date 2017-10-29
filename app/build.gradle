@@ -63,8 +63,13 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.google.code.gson:gson:2.6.2'
+    compile 'org.altbeacon:android-beacon-library:2.9.2'
+
     compile 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+}
+dependencies {
+    compile 'com.android.support:support-v4:25.+'
 }
 dependencies {
     compile 'com.android.support:support-v4:25.+'

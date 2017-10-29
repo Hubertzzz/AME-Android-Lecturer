@@ -35,6 +35,7 @@
         </activity>
         <activity android:name=".NavigationActivity" />
         <activity android:name=".StudentListActivity"></activity>
+        <activity android:name=".LogInActivity"/>
     </application>
 
 </manifest>
