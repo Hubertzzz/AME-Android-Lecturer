@@ -1,21 +1,17 @@
 package edu.np.ece.ame_android_lecturer.Fragment;
 
 import android.app.Activity;
-import android.content.Context;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,7 +25,6 @@ import edu.np.ece.ame_android_lecturer.Model.LessonBeacon;
 import edu.np.ece.ame_android_lecturer.Model.LessonDate;
 import edu.np.ece.ame_android_lecturer.Model.TimetableResult;
 import edu.np.ece.ame_android_lecturer.Model.Venue;
-import edu.np.ece.ame_android_lecturer.NavigationActivity;
 import edu.np.ece.ame_android_lecturer.OrmLite.DatabaseManager;
 import edu.np.ece.ame_android_lecturer.OrmLite.Subject;
 import edu.np.ece.ame_android_lecturer.OrmLite.SubjectDateTime;

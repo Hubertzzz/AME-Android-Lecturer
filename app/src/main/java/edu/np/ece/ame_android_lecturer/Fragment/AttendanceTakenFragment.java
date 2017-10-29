@@ -16,12 +16,14 @@ import android.widget.TextView;
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconTransmitter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import edu.np.ece.ame_android_lecturer.BeaconScanActivation;
+import edu.np.ece.ame_android_lecturer.Model.LessonDate;
 import edu.np.ece.ame_android_lecturer.Model.TimetableResult;
 import edu.np.ece.ame_android_lecturer.OrmLite.DatabaseManager;
 import edu.np.ece.ame_android_lecturer.OrmLite.Subject;
@@ -38,6 +40,7 @@ public class AttendanceTakenFragment extends Fragment {
 
     private ArrayList<String> datas = new ArrayList<String>();
 
+    public static List<LessonDate> LessonDateList;
     private Activity context;
 
     private View inflateView;
@@ -72,6 +75,7 @@ public class AttendanceTakenFragment extends Fragment {
     private String aId;
     private String aDate;
 
+    private List ClassDate = new ArrayList();
 
 
     private OnFragmentInteractionListener mListener;
@@ -122,10 +126,48 @@ public class AttendanceTakenFragment extends Fragment {
             if(BeaconScanActivation.timetableResultList != null){
 
                 for (final TimetableResult aSubject_time : BeaconScanActivation.timetableResultList ){
+                    ClassDate = aSubject_time.getLesson_date();
+                    SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    String dateNow = sDateFormat.format(new java.util.Date());
+                    for (int i = 0; i< ClassDate.size();i++){
+
+                    }
                     String aTime = aSubject_time.getLesson_date() + " " + aSubject_time.getLesson().getEnd_time();
                     aId = aSubject_time.getLesson_id();
                     List<Subject>subjectList = DatabaseManager.getInstance().QueryBuilder("lesson_id",aId);
                     List<SubjectDateTime>subjectDateTimeList = subjectList.get(0).getSubject_Datetime();
+
+                    String sTime = aSubject_time.getLesson_date().get(0)+ " " + aSubject_time.getLesson().getStart_time();
+
+
+
+
+                    String aModuleSec = subjectList.get(0).getSubject_area();
+                    String aModule = subjectList.get(0).getCatalog_number();
+                    datas.add(aModuleSec + " " + aModule);
+                    tvModule.setText(aModuleSec + " " + aModule);
+
+                    String aClass = aSubject_time.getLesson().getClass_section();
+                    datas.add(aClass);
+                    tvClass.setText(aClass);
+
+
+                    String cStartTime = subjectDateTimeList.get(0).getStartTime();
+                    String cEndTime = subjectDateTimeList.get(0).getEndTime();
+                    tvTime.setText(cStartTime + " - " + cEndTime);//显示时间
+                    datas.add(cStartTime+ " - "+ cEndTime);
+
+                    String cVenue = subjectList.get(0).getLocation();
+                    tvVenue.setText("#" + cVenue);
+                    datas.add(cVenue);
+
+
+
+
+
+
+
+
                 }
             }
         }

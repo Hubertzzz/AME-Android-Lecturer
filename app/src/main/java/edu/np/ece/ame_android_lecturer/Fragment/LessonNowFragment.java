@@ -1,13 +1,32 @@
 package edu.np.ece.ame_android_lecturer.Fragment;
 
-import android.content.Context;
-import android.net.Uri;
-import android.os.Bundle;
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
+import org.altbeacon.beacon.Beacon;
+import org.altbeacon.beacon.BeaconTransmitter;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import edu.np.ece.ame_android_lecturer.BeaconScanActivation;
+import edu.np.ece.ame_android_lecturer.Model.LessonDate;
+import edu.np.ece.ame_android_lecturer.Model.TimetableResult;
+import edu.np.ece.ame_android_lecturer.OrmLite.DatabaseManager;
+import edu.np.ece.ame_android_lecturer.OrmLite.Subject;
+import edu.np.ece.ame_android_lecturer.OrmLite.SubjectDateTime;
+import edu.np.ece.ame_android_lecturer.Preferences;
 import edu.np.ece.ame_android_lecturer.R;
 
 public class LessonNowFragment extends Fragment {
@@ -16,9 +35,44 @@ public class LessonNowFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private ArrayList<String> datas = new ArrayList<String>();
+
+    public static List<LessonDate> LessonDateList;
+    private Activity context;
+
+    private View inflateView;
+
+    @BindView(R.id.tvModule)
+    TextView tvModule;
+
+    @BindView(R.id.tvClass)
+    TextView tvClass;
+
+    @BindView(R.id.tvTime)
+    TextView tvTime;
+
+    @BindView(R.id.tvVenue)
+    TextView tvVenue;
+
+    @BindView(R.id.tvInfo)
+    TextView tvInfo;
+
+    @BindView(R.id.tvLeft)
+    TextView tvLeft;
+
+    @BindView(R.id.btnStop)
+    Button btnStop;
+
+    @BindView(R.id.tvEntire)
+    TextView tvEntire;
+
+    private Handler mHandler;
+    public static BeaconTransmitter beaconTransmitter;
+    public static Beacon.Builder beaconBuilder;
+    private String aId;
+    private String aDate;
+
+    private List ClassDate = new ArrayList();
 
 
 
@@ -47,19 +101,83 @@ public class LessonNowFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        try{
+            context = this.getActivity();
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        inflateView = inflater.inflate(R.layout.fragment_lesson_now,container,false);
+
+        ButterKnife.bind(this,inflateView);
+
+        SharedPreferences pref = getActivity().getSharedPreferences(Preferences.SharedPreferencesTag,Preferences.SharedPreferences_ModeTag);
+
+        String isLogin = pref.getString("isLogin","false");
+        String isLecturer = pref.getString("isLecturer","true");
+
+        if(isLogin.equals("true") && isLecturer.equals("true")){
+            String lecturerName = pref.getString("lecturer_name","");
+
+
+            if(BeaconScanActivation.timetableResultList != null){
+
+                for (final TimetableResult aSubject_time : BeaconScanActivation.timetableResultList ){
+                    ClassDate = aSubject_time.getLesson_date();
+                    SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    String dateNow = sDateFormat.format(new java.util.Date());
+                    for (int i = 0; i< ClassDate.size();i++){
+
+                    }
+                    String aTime = aSubject_time.getLesson_date() + " " + aSubject_time.getLesson().getEnd_time();
+                    aId = aSubject_time.getLesson_id();
+                    List<Subject>subjectList = DatabaseManager.getInstance().QueryBuilder("lesson_id",aId);
+                    List<SubjectDateTime>subjectDateTimeList = subjectList.get(0).getSubject_Datetime();
+
+                    String sTime = aSubject_time.getLesson_date().get(0)+ " " + aSubject_time.getLesson().getStart_time();
+
+
+
+
+                    String aModuleSec = subjectList.get(0).getSubject_area();
+                    String aModule = subjectList.get(0).getCatalog_number();
+                    datas.add(aModuleSec + " " + aModule);
+                    tvModule.setText(aModuleSec + " " + aModule);
+
+                    String aClass = aSubject_time.getLesson().getClass_section();
+                    datas.add(aClass);
+                    tvClass.setText(aClass);
+
+
+                    String cStartTime = subjectDateTimeList.get(0).getStartTime();
+                    String cEndTime = subjectDateTimeList.get(0).getEndTime();
+                    tvTime.setText(cStartTime + " - " + cEndTime);//显示时间
+                    datas.add(cStartTime+ " - "+ cEndTime);
+
+                    String cVenue = subjectList.get(0).getLocation();
+                    tvVenue.setText("#" + cVenue);
+                    datas.add(cVenue);
+
+
+
+
+
+
+
+
+                }
+            }
+        }
+
         return inflater.inflate(R.layout.fragment_lesson_now, container, false);
     }
 
-
-
 }
+
+
+
+

@@ -5,9 +5,108 @@
     tools:context="edu.np.ece.ame_android_lecturer.Fragment.LessonNowFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="lesson now" />
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/tvModule"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="adbc"
+                android:textColor="@color/bb_darkBackgroundColor"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvClass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvModule"
+                android:gravity="center"
+                android:text="aaaa"
+                android:textColor="@color/bb_darkBackgroundColor"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvClass"
+                android:gravity="center"
+                android:text="bbbb"
+                android:textColor="@color/bb_darkBackgroundColor"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvVenue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvTime"
+                android:gravity="center"
+                android:text="cccc"
+                android:textColor="@color/bb_darkBackgroundColor"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvInfo"
+                android:layout_marginTop="40dp"
+                android:layout_below="@+id/tvVenue"
+                android:gravity="center"
+                android:text="Now\n transmitting beacons\n for students"
+                android:textSize="15sp"
+                android:layout_centerHorizontal="true"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvLeft"
+                android:layout_below="@id/tvInfo"
+                android:layout_marginTop="50dp"
+                android:textColor="@color/red"
+                android:text="1234"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnStop"
+                android:layout_below="@id/tvLeft"
+                android:layout_marginTop="50dp"
+                android:layout_centerHorizontal="true"
+                android:text="STOP Transmit"
+                android:background="#00000000"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btnStop"
+                android:layout_marginTop="50dp"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="Entire Student list"
+                android:textColor="@color/md_blue_A200"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:id="@+id/tvEntire"/>
+
+        </RelativeLayout>
+    </ScrollView>
 
 </FrameLayout>
