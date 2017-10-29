@@ -105,6 +105,8 @@
                 android:textStyle="bold"
                 android:id="@+id/tvEntire"/>
 
+
+
         </RelativeLayout>
     </ScrollView>
 </FrameLayout>

@@ -14,9 +14,9 @@ import com.roughike.bottombar.OnTabSelectListener;
 
 import edu.np.ece.ame_android_lecturer.Fragment.AttendanceTakenFragment;
 import edu.np.ece.ame_android_lecturer.Fragment.GroupFragment;
+import edu.np.ece.ame_android_lecturer.Fragment.LecturerInfoFragment;
 import edu.np.ece.ame_android_lecturer.Fragment.MonitorListFragment;
 import edu.np.ece.ame_android_lecturer.Fragment.TimetableFragment;
-import edu.np.ece.ame_android_lecturer.Fragment.UserInfoFragment;
 
 
 public class NavigationActivity extends AppCompatActivity {
@@ -77,7 +77,8 @@ public class NavigationActivity extends AppCompatActivity {
                             break;
 
                         case R.id.tab_more:
-                            fragment=new UserInfoFragment();
+                            fragment=new LecturerInfoFragment();
+                            title = "More";
                             getSupportActionBar().setSubtitle(null);
                             break;
 
@@ -121,7 +122,8 @@ public class NavigationActivity extends AppCompatActivity {
                             break;
 
                         case R.id.tab_more:
-                            fragment= new UserInfoFragment();
+                            fragment= new LecturerInfoFragment();
+                            title = "More";
                             getSupportActionBar().setSubtitle(null);
                             break;
 
