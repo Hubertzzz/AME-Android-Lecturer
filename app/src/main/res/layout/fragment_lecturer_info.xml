@@ -1,0 +1,83 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.np.ece.ame_android_lecturer.Fragment.LecturerInfoFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvName"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="20dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                android:typeface="serif"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvPhone"
+                android:text="82938272"
+                android:layout_below="@id/tvName"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="10dp"
+                android:textSize="15sp"
+                android:typeface="serif"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvEmail"
+                android:layout_below="@id/tvPhone"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="10dp"
+                android:textSize="15sp"
+                android:typeface="serif"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvOffice"
+                android:layout_below="@id/tvEmail"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="10dp"
+                android:typeface="serif"/>
+
+            <TextView
+                android:id="@+id/btChange_password"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvOffice"
+                android:layout_marginTop="280dp"
+                android:background="@color/md_dark_dividers"
+                android:clickable="true"
+                android:text="Change Password"
+                android:textAppearance="@android:style/TextAppearance.Holo"
+                android:textSize="23sp"
+                android:typeface="serif" />
+
+            <TextView
+                android:id="@+id/btSignout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btChange_password"
+                android:layout_marginTop="10dp"
+                android:background="@color/md_dark_dividers"
+                android:clickable="true"
+                android:text="Sign Out"
+                android:textAppearance="@android:style/TextAppearance.Holo"
+                android:textSize="23sp"
+                android:typeface="serif" />
+
+        </RelativeLayout>
+    </ScrollView>
+
+</FrameLayout>
