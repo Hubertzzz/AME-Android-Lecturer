@@ -148,6 +148,7 @@ public class TimetableFragment extends Fragment {
             ServerApi client = ServiceGenerator.createService(ServerApi.class, auCode);
 
 
+
             String expand = new String("lesson,venue,lesson_date,beacon_lesson");
             Call<List<TimetableResult>> call = client.getTimetableCurrentWeek(expand);
             call.enqueue(new ServerCallBack<List<TimetableResult>>() {
@@ -204,9 +205,23 @@ public class TimetableFragment extends Fragment {
                                 aSubjectDateTime.setSubject(aSubject);
                                 DatabaseManager.getInstance().updateSubjectDateTimeItem(aSubjectDateTime);
 
-
+                                List<Subject> subjectList=DatabaseManager.getInstance().QueryBuilder("lesson_id",timetableList.get(i).getLesson_id());
+                                List<SubjectDateTime>subjectDateTimes=subjectList.get(0).getSubject_Datetime();
 
                             }
+
+
+                                /*TimetableResult aTimetableResult = new TimetableResult();
+                                List<LessonDate> aLessonDate = new ArrayList<LessonDate>();
+
+
+                                for (int i = 0; i < .getLesson_date_id().size(); i++) {
+                                    aLessonDate.get(i).setId(tmp2.getLesson_date_id().get(i).getId());
+                                    aLessonDate.get(i).setLdate(tmp2.getLesson_date());
+                                    aLessonDate.get(i).setLesson_id(tmp.getLesson_id());
+
+                                }
+                                aTimetableResult.setLesson_date(aLessonDate);*/
 
                         }
 

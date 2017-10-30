@@ -23,16 +23,27 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
-            android:name=".SplashActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/SplashTheme">
+            android:name=".LogInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<!--
+         <activity
+             android:name=".SplashActivity"
+             android:launchMode="singleTask"
+             android:theme="@style/SplashTheme">
+             <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
+
+                 <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
+         </activity>-->
+
         <activity android:name=".NavigationActivity" />
         <activity android:name=".StudentListActivity"></activity>
     </application>
