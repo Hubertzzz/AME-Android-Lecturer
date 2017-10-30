@@ -2,6 +2,7 @@ package edu.np.ece.ame_android_lecturer.Fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import edu.np.ece.ame_android_lecturer.Preferences;
 import edu.np.ece.ame_android_lecturer.R;
+import edu.np.ece.ame_android_lecturer.ResetPasswordActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -70,20 +72,40 @@ public class LecturerInfoFragment extends Fragment {
             final TextView tvEmail = (TextView)myView.findViewById(R.id.tvEmail);
         try{
             SharedPreferences pref = getActivity().getSharedPreferences(Preferences.SharedPreferencesTag,Preferences.SharedPreferences_ModeTag);
-            tvName.setText(pref.getString("Lecturer_name",""));
+            tvName.setText(pref.getString("lecturer_name",""));
             tvOffice.setText("BLK 7 Level 3");
-            tvEmail.setText(pref.getString("Lecturer_email",""));
+            tvEmail.setText(pref.getString("lecturer_email",""));
 
         }catch (Exception e ){
             e.printStackTrace();
         }
     }
+
+    private void settings(){
+        final TextView btnChangePass = (TextView)myView.findViewById(R.id.btChange_password);
+        btnChangePass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context,ResetPasswordActivity.class);
+                startActivity(intent);
+            }
+        });
+        final TextView btnSignout = (TextView)myView.findViewById(R.id.btSignout);
+        btnSignout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Preferences.clearLecturerInfo();
+            }
+        });
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        loadInfo();
+
         myView = inflater.inflate(R.layout.fragment_lecturer_info,container,false);
+        loadInfo();
+        settings();
         return myView;
     }
 

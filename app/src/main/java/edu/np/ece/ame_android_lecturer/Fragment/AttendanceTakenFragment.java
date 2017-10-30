@@ -135,10 +135,16 @@ public class AttendanceTakenFragment extends Fragment {
                                         String aModuleSec = String.valueOf(timetableList.get(i).getLesson().getSubject_area());
                                         String aModule = String.valueOf(timetableList.get(i).getLesson().getCatalog_number());
                                         tvModule.setText(aModuleSec + " " + aModule);
+                                        String aMo = aModuleSec +" "+aModule;
+                                        SharedPreferences pref = getActivity().getSharedPreferences(Preferences.SharedPreferencesTag,Preferences.SharedPreferences_ModeTag);
+                                        SharedPreferences.Editor editor = pref.edit();
+                                        editor.putString("aModule",aMo);
                                         datas.add(aModuleSec + " " + aModule);
                                         String aClass = String.valueOf(timetableList.get(i).getLesson().getClass_section());
                                         tvClass.setText(aClass);
                                         datas.add(aClass);
+                                        editor.putString("aClas",aClass);
+                                        editor.apply();
                                         String aStartTime = String.valueOf(timetableList.get(i).getLesson().getStart_time());
                                         String aEndTime = String.valueOf(timetableList.get(i).getLesson().getEnd_time());
                                         tvTime.setText(aStartTime+" - "+aEndTime);
@@ -153,7 +159,7 @@ public class AttendanceTakenFragment extends Fragment {
                                         Calendar calendar1 = Calendar.getInstance();
                                         calendar1.setTime(TimeNow);
 
-                                        String sTime = tDate + " "+ aStartTime;
+                                        String sTime = tDate + " "+ aEndTime;
                                         Date cTime = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(sTime);
                                         Calendar calendar2 = Calendar.getInstance();
                                         calendar2.setTime(cTime);

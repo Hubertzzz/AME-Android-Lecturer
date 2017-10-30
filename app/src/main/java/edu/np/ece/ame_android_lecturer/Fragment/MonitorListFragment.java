@@ -1,30 +1,23 @@
 package edu.np.ece.ame_android_lecturer.Fragment;
 
-import android.app.Notification;
-import android.content.Context;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
 
 import edu.np.ece.ame_android_lecturer.Adapter.MonitorListAdapter;
 import edu.np.ece.ame_android_lecturer.LogInActivity;
@@ -107,6 +100,10 @@ public class MonitorListFragment extends Fragment {
 
     public void initStudentlist(){
         final ListView listView = (ListView) myView.findViewById(R.id.monitorlist);
+        final TextView tvlesson_name=(TextView)myView.findViewById(R.id.tvlesson_name);
+        final TextView tvclass_section = (TextView)myView.findViewById(R.id.tvclass_section);
+
+
         monitorListAdapter = new MonitorListAdapter(getActivity(),R.layout.item_monitor_list,attendanceStatusList,studentList);
         listView.setAdapter(monitorListAdapter);
         monitorListAdapter.notifyDataSetChanged();
@@ -252,7 +249,7 @@ public class MonitorListFragment extends Fragment {
             JsonObject object=new JsonObject();
             // 需要输入当前课的lesson_date_id
 
-            lesson_date_id="32277";
+            lesson_date_id="32689";
 
             object.addProperty("lesson_date_id",lesson_date_id);
 
