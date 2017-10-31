@@ -2,6 +2,7 @@ package edu.np.ece.ame_android_lecturer.Fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,6 +23,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import edu.np.ece.ame_android_lecturer.Model.Lesson;
+import edu.np.ece.ame_android_lecturer.Model.LessonDate;
 import edu.np.ece.ame_android_lecturer.Model.TimetableResult;
 import edu.np.ece.ame_android_lecturer.Preferences;
 import edu.np.ece.ame_android_lecturer.R;
@@ -54,7 +57,9 @@ public class AttendanceTakenFragment extends Fragment {
 
     private Activity context;
     private View myView;
-
+    private List<LessonDate> lessonDatesResult;
+    private List<LessonDate > weeklydate=new ArrayList<>();
+    private List<Lesson> weeklylesson= new ArrayList<>();
 
 
 
@@ -63,6 +68,9 @@ public class AttendanceTakenFragment extends Fragment {
     public static Beacon.Builder beaconBuilder;
     private String aID;
     private String aDate;
+    private String aClass;
+    private String aModule;
+
     //private String aStartTime,aEndTime;
 
     // TODO: Rename and change types of parameters
@@ -129,6 +137,10 @@ public class AttendanceTakenFragment extends Fragment {
                             String aModule = String.valueOf(timetableList.get(0).getLesson().getCatalog_number());
                             datas.add(aModuleSec+" "+aModule);
                             tvModule.setText(aModuleSec+" "+aModule);*/
+
+                            AddLessondate();
+
+
                             for(int i = 0 ; i < timetableList.size(); i++){
                                 for(int e=0; e< timetableList.get(i).getLesson_date().size();e++){
                                     if(tDate.equals(timetableList.get(i).getLesson_date().get(e).getLdate())){
@@ -140,7 +152,10 @@ public class AttendanceTakenFragment extends Fragment {
                                         SharedPreferences.Editor editor = pref.edit();
                                         editor.putString("aModule",aMo);
                                         datas.add(aModuleSec + " " + aModule);
-                                        String aClass = String.valueOf(timetableList.get(i).getLesson().getClass_section());
+
+                                        aModule=aModuleSec+" "+aModule;
+
+                                        aClass = String.valueOf(timetableList.get(i).getLesson().getClass_section());
                                         tvClass.setText(aClass);
                                         datas.add(aClass);
                                         editor.putString("aClas",aClass);
@@ -218,6 +233,14 @@ public class AttendanceTakenFragment extends Fragment {
     }
 
 
+    public void AddLessondate(){
+        for(int i=0;i<timetableList.size();i++){
+            lessonDatesResult=timetableList.get(i).getLesson_date();
+            weeklylesson.add(timetableList.get(i).getLesson());
+            weeklydate.add(timetableList.get(i).getLesson_date().get(i));
+
+        }
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -225,6 +248,14 @@ public class AttendanceTakenFragment extends Fragment {
         myView = inflater.inflate(R.layout.fragment_attendance_taken,container,false);
         loadInformation();
         mHandler = new Handler();
+        SharedPreferences valuetrans = getActivity().getSharedPreferences("valueOfTB", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor=valuetrans.edit();
+
+       // editor.putString("lesson_date_id",);
+        editor.putString("module",aModule);
+        editor.putString("class",aClass);
+        editor.commit();
+
         return myView;
     }
 
