@@ -95,6 +95,7 @@ public class Preferences {
         editor.putString("lecturer_name", _lecturerInfo.getName());
         editor.putString("lecturer_id",_lecturerInfo.getId() );
         editor.putString("lecturer_acad", _lecturerInfo.getAcad());
+        editor.putString("lecturer_email",_lecturerInfo.getEmail());
         editor.putString("authorizationCode", "Bearer " + _lecturerInfo.getToken());
         editor.putString("major", _lecturerInfo.getMajor());
         editor.putString("minor", _lecturerInfo.getMinor());

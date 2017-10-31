@@ -2,13 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.np.ece.ame_android_lecturer">
 
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-
-    <uses-feature
-        android:name="android.hardware.bluetooth_le"
-        android:required="true" />
-
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -43,6 +36,7 @@
         <activity android:name=".NavigationActivity" />
         <activity android:name=".StudentListActivity"></activity>
         <activity android:name=".LogInActivity"/>
+        <activity android:name=".ResetActivity"/>
     </application>
 
 </manifest>

@@ -10,11 +10,11 @@
         android:id="@+id/tvlesson_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="23dp"
+        android:text="ELECTRO 2CPP2"
+        android:textAppearance="@android:style/TextAppearance.Material.Large"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="11dp"
-        android:text="ELECTRIC 2ELTECH"
-        android:textAppearance="@android:style/TextAppearance.Material.Large" />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/tvclass_section"
@@ -23,7 +23,7 @@
         android:layout_below="@+id/tvlesson_name"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="11dp"
-        android:text="L1B2"
+        android:text="T2L1"
         android:textAppearance="@android:style/TextAppearance.Material.Large"
         android:textSize="18sp" />
 
