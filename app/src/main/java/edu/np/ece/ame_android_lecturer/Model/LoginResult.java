@@ -13,6 +13,10 @@ public class LoginResult {
     @Expose
     private String name;
 
+    @SerializedName("id")
+    @Expose
+    private String id;
+
     @SerializedName("acad")
     @Expose
     private String acad;
@@ -81,6 +85,14 @@ public class LoginResult {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getId(){
+        return id;
+    }
+
+    public void setId(String id){
+        this.id = id;
     }
 
 }

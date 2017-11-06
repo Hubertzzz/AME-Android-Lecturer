@@ -249,6 +249,7 @@ public class MonitorListFragment extends Fragment {
             JsonObject object=new JsonObject();
             // 需要输入当前课的lesson_date_id
 
+
             lesson_date_id="32689";
 
             object.addProperty("lesson_date_id",lesson_date_id);
