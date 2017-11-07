@@ -111,8 +111,8 @@ public class StudentlistFragment extends Fragment {
                         studentList=response.body();
                         if(studentList==null){
                             final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                            builder.setTitle("ERROR");
-                            builder.setMessage("Cannot find student list");
+                            builder.setTitle("Detect another login.");
+                            builder.setMessage("You will automatically sign out. Click here to sign in again.");
                             builder.setPositiveButton("OK",
                                     new DialogInterface.OnClickListener() {
                                         @Override

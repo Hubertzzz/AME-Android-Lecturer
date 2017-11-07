@@ -2,10 +2,13 @@ package edu.np.ece.ame_android_lecturer.Fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +26,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import edu.np.ece.ame_android_lecturer.Adapter.MonitorListAdapter;
 import edu.np.ece.ame_android_lecturer.Model.Lesson;
 import edu.np.ece.ame_android_lecturer.Model.LessonDate;
 import edu.np.ece.ame_android_lecturer.Model.TimetableResult;
+import edu.np.ece.ame_android_lecturer.OrmLite.DatabaseManager;
+import edu.np.ece.ame_android_lecturer.OrmLite.Monitor;
+import edu.np.ece.ame_android_lecturer.OrmLite.Subject;
 import edu.np.ece.ame_android_lecturer.Preferences;
 import edu.np.ece.ame_android_lecturer.R;
 import edu.np.ece.ame_android_lecturer.Retrofit.ServerApi;
@@ -57,10 +64,11 @@ public class AttendanceTakenFragment extends Fragment {
 
     private Activity context;
     private View myView;
+    private String aMo;
     private List<LessonDate> lessonDatesResult;
     private List<LessonDate > weeklydate=new ArrayList<>();
     private List<Lesson> weeklylesson= new ArrayList<>();
-
+    FragmentManager fragmentManager;
 
 
     private Handler mHandler;
@@ -70,6 +78,10 @@ public class AttendanceTakenFragment extends Fragment {
     private String aDate;
     private String aClass;
     private String aModule;
+    private String aModuleSec;
+
+
+    private DatabaseManager monitorDao;
 
     //private String aStartTime,aEndTime;
 
@@ -94,8 +106,11 @@ public class AttendanceTakenFragment extends Fragment {
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
+
         fragment.setArguments(args);
         return fragment;
+
+
     }
 
     @Override
@@ -113,7 +128,7 @@ public class AttendanceTakenFragment extends Fragment {
         final TextView tvInfo = (TextView)myView.findViewById(R.id.tvInfo);
         Preferences.showLoading(context,"Now Class","Loading data from server...");
         try{
-            SharedPreferences pref = getActivity().getSharedPreferences(Preferences.SharedPreferencesTag,Preferences.SharedPreferences_ModeTag);
+            final SharedPreferences pref = getActivity().getSharedPreferences(Preferences.SharedPreferencesTag,Preferences.SharedPreferences_ModeTag);
             String auCode = pref.getString("authorizationCode",null);
             SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             final String tDate = sDateFormat.format(new java.util.Date());
@@ -138,28 +153,60 @@ public class AttendanceTakenFragment extends Fragment {
                             datas.add(aModuleSec+" "+aModule);
                             tvModule.setText(aModuleSec+" "+aModule);*/
 
-                            AddLessondate();
+                         //   AddLessondate();
 
 
                             for(int i = 0 ; i < timetableList.size(); i++){
                                 for(int e=0; e< timetableList.get(i).getLesson_date().size();e++){
                                     if(tDate.equals(timetableList.get(i).getLesson_date().get(e).getLdate())){
-                                        String aModuleSec = String.valueOf(timetableList.get(i).getLesson().getSubject_area());
-                                        String aModule = String.valueOf(timetableList.get(i).getLesson().getCatalog_number());
+                                        aModuleSec = String.valueOf(timetableList.get(i).getLesson().getSubject_area());
+                                        aModule = String.valueOf(timetableList.get(i).getLesson().getCatalog_number());
                                         tvModule.setText(aModuleSec + " " + aModule);
-                                        String aMo = aModuleSec +" "+aModule;
-                                        SharedPreferences pref = getActivity().getSharedPreferences(Preferences.SharedPreferencesTag,Preferences.SharedPreferences_ModeTag);
-                                        SharedPreferences.Editor editor = pref.edit();
-                                        editor.putString("aModule",aMo);
+                                        aMo = aModuleSec +" "+aModule;
+
                                         datas.add(aModuleSec + " " + aModule);
 
-                                        aModule=aModuleSec+" "+aModule;
+
 
                                         aClass = String.valueOf(timetableList.get(i).getLesson().getClass_section());
                                         tvClass.setText(aClass);
                                         datas.add(aClass);
-                                        editor.putString("aClas",aClass);
-                                        editor.apply();
+
+
+
+                                       /* Fragment fragment=new MonitorListFragment();
+                                        Bundle bundle= new Bundle();
+                                        bundle.putString("module",aModule);
+                                        bundle.putString("class",aClass);
+                                        fragment.setArguments(bundle);*/
+
+                                       /* SharedPreferences.Editor edt=pref.edit();
+                                        // editor.putString("lesson_date_id",);
+                                        edt.putString("module",aModule);
+                                        edt.putString("class",aClass);
+                                        edt.commit();*/
+                                        String date=timetableList.get(i).getLesson_date().get(e).getId();
+
+                                        monitorDao= new DatabaseManager(getActivity());
+
+                                        Monitor monitor=new Monitor();
+                                        monitorDao.deleteMonitor(); //clear odd
+                                        monitor.setModule(aModule);
+                                        monitor.setSubjectarea(aModuleSec);
+                                        monitor.setClass_section(aClass);
+                                        monitor.setLesson_date_id(date);
+                                        monitorDao.addMonitor(monitor);
+
+                                        DatabaseManager manager=new DatabaseManager(getActivity());
+                                        Monitor monitor1=new Monitor();
+                                     //   manager.deleteMonitor(); //clear odd data
+                                        List<Monitor> monitors= manager.getMonitor(); //det data
+
+
+
+
+
+
                                         String aStartTime = String.valueOf(timetableList.get(i).getLesson().getStart_time());
                                         String aEndTime = String.valueOf(timetableList.get(i).getLesson().getEnd_time());
                                         tvTime.setText(aStartTime+" - "+aEndTime);
@@ -193,6 +240,9 @@ public class AttendanceTakenFragment extends Fragment {
                                             beaconTransmitter = new BeaconTransmitter(getActivity().getBaseContext(),beaconParser);
                                             break;
                                         }
+
+
+
                                     }
                                 }
 
@@ -200,6 +250,9 @@ public class AttendanceTakenFragment extends Fragment {
 
 
                             }
+
+
+
                         }
                        /* if (beaconTransmitter != null && beaconBuilder != null){
                             mHandler.postDelayed(new Runnable() {
@@ -248,13 +301,11 @@ public class AttendanceTakenFragment extends Fragment {
         myView = inflater.inflate(R.layout.fragment_attendance_taken,container,false);
         loadInformation();
         mHandler = new Handler();
-        SharedPreferences valuetrans = getActivity().getSharedPreferences("valueOfTB", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor=valuetrans.edit();
 
-       // editor.putString("lesson_date_id",);
-        editor.putString("module",aModule);
-        editor.putString("class",aClass);
-        editor.commit();
+
+
+
+
 
         return myView;
     }

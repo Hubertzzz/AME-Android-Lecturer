@@ -34,5 +34,5 @@
         android:layout_below="@+id/tvclass_section"
         android:layout_marginTop="15dp"
         android:divider="@color/divider"
-        android:dividerHeight="1px"/>
+        android:dividerHeight="1px" />
 </RelativeLayout>
