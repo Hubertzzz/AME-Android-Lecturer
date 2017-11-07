@@ -11,7 +11,9 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by MIYA on 19/09/17.
@@ -21,15 +23,17 @@ import java.util.List;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     // name of the database file for your application -- change to something appropriate for your app
-    private static final String DATABASE_NAME = "SubjectDB.sqlite";
+    private static final String DATABASE_NAME = "MonitorDB.db";
 
     // any time you make changes to your database objects, you may have to increase the database versdion
     private static final int DATABASE_VERSION = 1;
 
     // the DAO object we use to access the SimpleData table
-    private Dao<Subject, Integer> SubjectDao = null;
-    private Dao<SubjectDateTime, Integer> SubjectDateTimeDao = null;
-    private Dao<Student, Integer> students = null;
+
+    //private Dao<Monitor,Integer> monitorsDao;
+    private static DatabaseHelper instance;
+
+    private Map<String,Dao> maps=new HashMap<>();
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -37,10 +41,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
+        //完成对数据库的创建以及表的建立
         try {
-            TableUtils.createTable(connectionSource, Subject.class);
-            TableUtils.createTable(connectionSource, SubjectDateTime.class);
-            TableUtils.createTable(connectionSource, Student.class);
+
+            TableUtils.createTable(connectionSource,Monitor.class);
 
         } catch (SQLException e) {
             Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
@@ -53,77 +57,65 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db,ConnectionSource connectionSource, int oldVersion, int newVersion) {
+
         try {
-            List<String> allSql = new ArrayList<String>();
-            /*switch(oldVersion)
+            TableUtils.dropTable(connectionSource,Monitor.class,true);
+           // onCreate(db,connectionSource);
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+
+    public static synchronized DatabaseHelper getInstance(Context context){
+
+        if (instance == null)
+        {
+            synchronized (DatabaseHelper.class)
             {
-                case 1:
-                    //allSql.add("alter table AdData add column `new_col` VARCHAR");
-                    //allSql.add("alter table AdData add column `new_col2` VARCHAR");
-
-
-            }*/
-            /*if(oldVersion<5){
-                try {
-                    SubjectDao.executeRaw("ALTER TABLE `Subject` ADD COLUMN teacher_office STRING;");
-                    SubjectDao.executeRaw("ALTER TABLE `Subject` ADD COLUMN teacher_phone STRING;");
-                    SubjectDao.executeRaw("ALTER TABLE `Subject` ADD COLUMN class_section STRING;");
-                } catch (java.sql.SQLException e) {
-                    e.printStackTrace();
-                }
-
+                if (instance == null)
+                    instance = new DatabaseHelper(context);
             }
-            if(oldVersion<6){
-                try {
-                    SubjectDao.executeRaw("ALTER TABLE `Subject` ADD COLUMN lesson_name STRING;");
-                    SubjectDao.executeRaw("ALTER TABLE `Subject` ADD COLUMN credit_unit STRING;");
-                } catch (java.sql.SQLException e) {
-                    e.printStackTrace();
-                }
-            }*/
-            for (String sql : allSql) {
-                db.execSQL(sql);
-            }
-        } catch (SQLException e) {
-            Log.e(DatabaseHelper.class.getName(), "exception during onUpgrade", e);
-            throw new RuntimeException(e);
         }
+
+        return instance;
+    }
+
+    public synchronized Dao getDao(Class cls) throws SQLException, java.sql.SQLException {
+        Dao dao=null;
+        String className=cls.getSimpleName();
+
+        if(maps.containsKey(className)){
+            dao=maps.get(className);
+        }else {
+            dao=super.getDao(cls);
+            maps.put(className,dao);
+        }
+        return dao;
 
     }
 
-    public Dao<Subject, Integer> getSubjectDao() {
-        if (null == SubjectDao) {
-            try {
-                SubjectDao = getDao(Subject.class);
-            }catch (java.sql.SQLException e) {
-                e.printStackTrace();
-            }
+/*   public Dao<Monitor,Integer> getMonitorsDao() throws SQLException{
+       try {
+           if(monitorsDao==null){
+               monitorsDao=getDao(Monitor.class);
+           }
+       } catch (java.sql.SQLException e) {
+           e.printStackTrace();
+       }
+       return monitorsDao;
+   }*/
+
+    @Override
+    public void close() {
+        super.close();
+        for (String key:maps.keySet()){
+            Dao dao=maps.get(key);
+            dao=null;
         }
-        return SubjectDao;
     }
-
-    public Dao<SubjectDateTime, Integer> getSubjectDateTimeDao() {
-        if (null == SubjectDateTimeDao) {
-            try {
-                SubjectDateTimeDao = getDao(SubjectDateTime.class);
-            }catch (java.sql.SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return SubjectDateTimeDao;
-    }
-
-
-    public Dao<Student, Integer> getStudentDao() {
-        if (null == students) {
-            try {
-                students = getDao(Student.class);
-            }catch (java.sql.SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return students;
-    }
-
 
 }

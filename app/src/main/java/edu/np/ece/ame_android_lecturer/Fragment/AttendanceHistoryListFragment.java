@@ -137,7 +137,7 @@ public class AttendanceHistoryListFragment extends Fragment {
 
             JsonObject object=new JsonObject();
             object.addProperty("lesson_date_id",lesson_date_id);
-
+         //   object.addProperty("lesson_date_id",32694);
             ServerApi client = ServiceGenerator.createService(ServerApi.class, auCode);
             Call<List<ListAttendanceStatus>> call=client.getStudentAttendanceStatus(object);
             call.enqueue(new ServerCallBack<List<ListAttendanceStatus>>() {
@@ -147,8 +147,8 @@ public class AttendanceHistoryListFragment extends Fragment {
                         attendanceStatusList=response.body();
                         if(attendanceStatusList==null){
                             final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                            builder.setTitle("ERROR");
-                            builder.setMessage("Cannot find student list");
+                            builder.setTitle("Detect another login.");
+                            builder.setMessage("You will automatically sign out. Click here to sign in again.");
                             builder.setPositiveButton("OK",
                                     new DialogInterface.OnClickListener() {
                                         @Override
@@ -186,7 +186,7 @@ public class AttendanceHistoryListFragment extends Fragment {
             ServerApi client = ServiceGenerator.createService(ServerApi.class, auCode);
             JsonObject toUp = new JsonObject();
             toUp.addProperty("lesson_id",lesson_id);
-
+          //  toUp.addProperty("lesson_id",140);
             Call<List<StudentInfo>> call = client.getStudentList(toUp);
             call.enqueue(new ServerCallBack<List<StudentInfo>>() {
                 @Override
@@ -196,8 +196,8 @@ public class AttendanceHistoryListFragment extends Fragment {
                         studentList=response.body();
                         if(studentList==null){
                             final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                            builder.setTitle("ERROR");
-                            builder.setMessage("Cannot find student list");
+                            builder.setTitle("Detect another login.");
+                            builder.setMessage("You will automatically sign out. Click here to sign in again.");
                             builder.setPositiveButton("OK",
                                     new DialogInterface.OnClickListener() {
                                         @Override
@@ -336,8 +336,8 @@ public class AttendanceHistoryListFragment extends Fragment {
                         dateList=response.body();
                         if(dateList==null){
                             final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                            builder.setTitle("ERROR");
-                            builder.setMessage("Cannot find date list");
+                            builder.setTitle("Detect another login.");
+                            builder.setMessage("You will automatically sign out. Click here to sign in again.");
                             builder.setPositiveButton("OK",
                                     new DialogInterface.OnClickListener() {
                                         @Override
