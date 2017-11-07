@@ -10,11 +10,11 @@
         android:id="@+id/tvlesson_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="23dp"
-        android:text="ELECTRO 2CPP2"
-        android:textAppearance="@android:style/TextAppearance.Material.Large"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="23dp"
+        android:text="@string/no_lesson_now"
+        android:textAppearance="@android:style/TextAppearance.Material.Large" />
 
     <TextView
         android:id="@+id/tvclass_section"
@@ -23,7 +23,7 @@
         android:layout_below="@+id/tvlesson_name"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="11dp"
-        android:text="T2L1"
+        android:text="@string/now"
         android:textAppearance="@android:style/TextAppearance.Material.Large"
         android:textSize="18sp" />
 

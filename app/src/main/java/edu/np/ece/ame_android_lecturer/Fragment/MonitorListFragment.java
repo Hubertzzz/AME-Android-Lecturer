@@ -57,8 +57,10 @@ public class MonitorListFragment extends Fragment {
     private String status;
     private String student_name;
     MonitorListAdapter monitorListAdapter;
+    DatabaseManager manager;
     TextView tvlesson_name;
     TextView tvclass_section;
+    List<Monitor> monitors;
 
 
     public MonitorListFragment() {
@@ -272,7 +274,7 @@ public class MonitorListFragment extends Fragment {
                     try {
                         attendanceStatusList=response.body();
                         if(attendanceStatusList==null){
-                            /*final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                             builder.setTitle("Not at the time");
                             builder.setMessage("The class haven't begin.");
                             builder.setPositiveButton("OK",
@@ -285,13 +287,15 @@ public class MonitorListFragment extends Fragment {
                                             getActivity().finish();
                                         }
                                     });
-                            builder.create().show();*/
-                            tvlesson_name.setText(" Don't have lesson to monitor ");
-                            tvclass_section.setText(" for now ");
+                            builder.create().show();
+
+
 
                         }
                         else {
                             initAttendanceList();
+                            tvlesson_name.setText(monitors.get(0).getSubjectarea()+" "+monitors.get(0).getModule());
+                            tvclass_section.setText(monitors.get(0).getClass_section());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -314,13 +318,14 @@ public class MonitorListFragment extends Fragment {
 
         tvclass_section = (TextView)myView.findViewById(R.id.tvclass_section);
 
-        DatabaseManager manager=new DatabaseManager(getActivity());
 
-        List<Monitor> monitors= manager.getMonitor(); //det data
-        tvlesson_name.setText(monitors.get(0).getSubjectarea()+" "+monitors.get(0).getModule());
-        tvclass_section.setText(monitors.get(0).getClass_section());
-        lesson_date_id=monitors.get(0).getLesson_date_id();
+        manager = new DatabaseManager(getActivity());
 
+
+        monitors = manager.getMonitor();//det data
+
+        //   lesson_date_id=monitors.get(0).getLesson_date_id();
+        lesson_date_id="32699"; //没有attendance list的课 未来的课
      //   manager.deleteMonitor(); //clear odd data
 
 
