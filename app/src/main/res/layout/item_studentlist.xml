@@ -5,6 +5,7 @@
 
 
     <LinearLayout
+        android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -12,7 +13,6 @@
             android:id="@+id/tvstu_order"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="1"
             android:textAlignment="viewStart"
             android:textAppearance="@android:style/TextAppearance.Material"
@@ -22,10 +22,11 @@
             android:id="@+id/tvstu_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="64dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@id/tvstu_order"
             android:text="YOO YOO"
+            android:layout_alignBottom="@id/layout"
             android:textAlignment="viewStart"
             android:textAppearance="@android:style/TextAppearance.Material"
             android:textSize="18sp" />
@@ -34,9 +35,9 @@
             android:id="@+id/tvstu_card"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="100dp"
             android:text="s10167263F"
-            android:textAlignment="textEnd"
             android:textAppearance="@android:style/TextAppearance.Material"
             android:textSize="18sp" />
 

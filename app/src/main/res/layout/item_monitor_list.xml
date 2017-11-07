@@ -35,7 +35,6 @@
             android:layout_height="match_parent"
             android:layout_alignBottom="@+id/tvorder"
             android:layout_marginStart="190dp"
-
             android:layout_centerVertical="true"
             android:text="S10167483F"
             android:textAppearance="@android:style/TextAppearance.Material.Large"
