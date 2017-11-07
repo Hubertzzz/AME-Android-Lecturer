@@ -324,8 +324,8 @@ public class MonitorListFragment extends Fragment {
 
         monitors = manager.getMonitor();//det data
 
-        //   lesson_date_id=monitors.get(0).getLesson_date_id();
-        lesson_date_id="32699"; //没有attendance list的课 未来的课
+        lesson_date_id=monitors.get(0).getLesson_date_id();
+       // lesson_date_id="32699"; //没有attendance list的课 未来的课
      //   manager.deleteMonitor(); //clear odd data
 
 
