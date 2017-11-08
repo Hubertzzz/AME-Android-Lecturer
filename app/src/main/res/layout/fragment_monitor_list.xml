@@ -27,7 +27,7 @@
         android:textAppearance="@android:style/TextAppearance.Material.Large"
         android:textSize="18sp" />
 
-    <ListView
+    <ExpandableListView
         android:id="@+id/monitorlist"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

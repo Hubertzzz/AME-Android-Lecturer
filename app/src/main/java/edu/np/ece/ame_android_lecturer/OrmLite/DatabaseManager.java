@@ -19,6 +19,7 @@ public class DatabaseManager {
     private DatabaseHelper helper;
 
     static private DatabaseManager instance;
+
     public DatabaseManager(Context context){
         this.context=context;
         helper=DatabaseHelper.getInstance(context);
@@ -57,8 +58,11 @@ public class DatabaseManager {
 
     public void deleteMonitor(){
         try {
-           // monitorDao.delete(getMonitor()); //delete all datas 如果用户没有先点击now page，就存不进去
+            /*for(int i=0;i<monitors.size();i++){
+                monitorDao.deleteById(i);
+            }*/
             monitorDao.deleteById(0);
+
         } catch (java.sql.SQLException e) {
             e.printStackTrace();
         }

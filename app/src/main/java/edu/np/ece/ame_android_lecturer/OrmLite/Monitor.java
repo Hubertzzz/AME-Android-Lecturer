@@ -24,6 +24,7 @@ public class Monitor {
     @DatabaseField
     private String lesson_date_id;
 
+
     public Monitor(){
 
     }
@@ -35,6 +36,8 @@ public class Monitor {
         this.class_section = class_section;
         this.lesson_date_id = lesson_date_id;
     }
+
+
 
     public void setId(int id) {
         this.id = id;

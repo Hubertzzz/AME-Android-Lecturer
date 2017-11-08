@@ -79,9 +79,9 @@ public class AttendanceTakenFragment extends Fragment {
     private String aClass;
     private String aModule;
     private String aModuleSec;
+    private String Ldate;
 
 
-    private DatabaseManager monitorDao;
 
     //private String aStartTime,aEndTime;
 
@@ -173,6 +173,7 @@ public class AttendanceTakenFragment extends Fragment {
                                         datas.add(aClass);
 
 
+                                        Ldate = timetableList.get(i).getLesson_date().get(e).getLdate();
 
                                        /* Fragment fragment=new MonitorListFragment();
                                         Bundle bundle= new Bundle();
@@ -187,7 +188,7 @@ public class AttendanceTakenFragment extends Fragment {
                                         edt.commit();*/
                                         String date=timetableList.get(i).getLesson_date().get(e).getId();
 
-                                        monitorDao= new DatabaseManager(getActivity());
+                                        DatabaseManager monitorDao= new DatabaseManager(getActivity());
 
                                         Monitor monitor=new Monitor();
                                         monitorDao.deleteMonitor(); //clear odd
@@ -195,13 +196,13 @@ public class AttendanceTakenFragment extends Fragment {
                                         monitor.setSubjectarea(aModuleSec);
                                         monitor.setClass_section(aClass);
                                         monitor.setLesson_date_id(date);
+                                    //    monitor.setLesson_date(Ldate);
                                         monitorDao.addMonitor(monitor);
 
-                                        DatabaseManager manager=new DatabaseManager(getActivity());
+                                       /* DatabaseManager manager=new DatabaseManager(getActivity());
                                         Monitor monitor1=new Monitor();
                                      //   manager.deleteMonitor(); //clear odd data
-                                        List<Monitor> monitors= manager.getMonitor(); //det data
-
+                                        List<Monitor> monitors= manager.getMonitor(); //det data*/
 
 
 
@@ -242,8 +243,8 @@ public class AttendanceTakenFragment extends Fragment {
                                         }
 
 
-
                                     }
+
                                 }
 
 
@@ -286,14 +287,14 @@ public class AttendanceTakenFragment extends Fragment {
     }
 
 
-    public void AddLessondate(){
+    /*public void AddLessondate(){
         for(int i=0;i<timetableList.size();i++){
             lessonDatesResult=timetableList.get(i).getLesson_date();
             weeklylesson.add(timetableList.get(i).getLesson());
             weeklydate.add(timetableList.get(i).getLesson_date().get(i));
 
         }
-    }
+    }*/
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
