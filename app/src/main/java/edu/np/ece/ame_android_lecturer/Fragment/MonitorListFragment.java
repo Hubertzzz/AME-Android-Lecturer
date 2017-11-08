@@ -20,6 +20,7 @@ import com.google.gson.JsonObject;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -370,13 +371,20 @@ public class MonitorListFragment extends Fragment {
 
         manager = new DatabaseManager(getActivity());
 
-        manager.deleteMonitor();
+
         monitors = manager.getMonitor();//det data
+        String Ldate=monitors.get(0).getLdate();
+        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String tDate = sDateFormat.format(new java.util.Date());
+        if(tDate.equals(Ldate)){
+            lesson_date_id=monitors.get(0).getLesson_date_id();
+        }
+        else {
+            lesson_date_id="";
+        }
 
-        lesson_date_id=monitors.get(0).getLesson_date_id();
+
        // lesson_date_id="32699"; //没有attendance list的课 未来的课
-     //   manager.deleteMonitor(); //clear odd data
-
 
 
         listAttendance();

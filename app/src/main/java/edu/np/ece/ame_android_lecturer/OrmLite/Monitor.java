@@ -24,6 +24,8 @@ public class Monitor {
     @DatabaseField
     private String lesson_date_id;
 
+    @DatabaseField (columnName = "Ldate")
+    private String Ldate;
 
     public Monitor(){
 
@@ -37,7 +39,13 @@ public class Monitor {
         this.lesson_date_id = lesson_date_id;
     }
 
+    public String getLdate() {
+        return Ldate;
+    }
 
+    public void setLdate(String ldate) {
+        Ldate = ldate;
+    }
 
     public void setId(int id) {
         this.id = id;

@@ -192,18 +192,21 @@ public class AttendanceTakenFragment extends Fragment {
 
                                         Monitor monitor=new Monitor();
                                         monitorDao.deleteMonitor(); //clear odd
+
+                                        //无法删除旧数据！！！
                                         monitor.setModule(aModule);
                                         monitor.setSubjectarea(aModuleSec);
                                         monitor.setClass_section(aClass);
                                         monitor.setLesson_date_id(date);
-                                    //    monitor.setLesson_date(Ldate);
+                                        monitor.setLdate(Ldate);
                                         monitorDao.addMonitor(monitor);
+                                        List<Monitor> monitors=new ArrayList<Monitor>();
+                                        monitors=monitorDao.getMonitor();
 
-                                       /* DatabaseManager manager=new DatabaseManager(getActivity());
-                                        Monitor monitor1=new Monitor();
-                                     //   manager.deleteMonitor(); //clear odd data
-                                        List<Monitor> monitors= manager.getMonitor(); //det data*/
-
+                                      /*  DatabaseManager manager=new DatabaseManager(getActivity());
+                                        manager.deleteMonitor(); //clear odd data
+                                        List<Monitor> monitors1= manager.getMonitor(); //det data
+*/
 
 
 
@@ -243,6 +246,13 @@ public class AttendanceTakenFragment extends Fragment {
                                         }
 
 
+                                    }else {
+                                        /*DatabaseManager monitorDao= new DatabaseManager(getActivity());
+
+                                        Monitor monitor=new Monitor();
+                                        monitorDao.deleteMonitor();
+                                        List<Monitor> monitors=monitorDao.getMonitor();*/
+                                        tvClass.setText("no lesson");
                                     }
 
                                 }

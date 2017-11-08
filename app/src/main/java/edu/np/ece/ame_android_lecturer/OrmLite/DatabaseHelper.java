@@ -23,7 +23,7 @@ import java.util.Map;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     // name of the database file for your application -- change to something appropriate for your app
-    private static final String DATABASE_NAME = "MonitorDB.db";
+    private static final String DATABASE_NAME = "DB.db";
 
     // any time you make changes to your database objects, you may have to increase the database versdion
     private static final int DATABASE_VERSION = 1;
@@ -59,8 +59,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onUpgrade(SQLiteDatabase db,ConnectionSource connectionSource, int oldVersion, int newVersion) {
 
         try {
+
             TableUtils.dropTable(connectionSource,Monitor.class,true);
-           // onCreate(db,connectionSource);
+            onCreate(db,connectionSource);
+
 
         } catch (java.sql.SQLException e) {
             e.printStackTrace();

@@ -67,6 +67,14 @@ public class DatabaseManager {
             e.printStackTrace();
         }
     }
+    public void deleteMultiMonitor(List<Monitor> monitors){
+        try {
+            monitorDao.delete(monitors);
+            monitorDao.clearObjectCache();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public List<Monitor> getMonitor(){
         List<Monitor> monitors=null;
         try {
