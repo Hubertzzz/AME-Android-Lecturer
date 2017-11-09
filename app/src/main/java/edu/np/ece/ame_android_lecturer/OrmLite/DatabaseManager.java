@@ -67,6 +67,7 @@ public class DatabaseManager {
                 monitorDao.deleteById(i);
             }*/
             //monitorDao.delete();
+           //删除数据库所有数据
             helper = getHelper();
             monitorDao = helper.getDao(Monitor.class);
             monitorDao.queryRaw("delete from monitor");
@@ -76,14 +77,7 @@ public class DatabaseManager {
             e.printStackTrace();
         }
     }
-    public void deleteMultiMonitor(List<Monitor> monitors){
-        try {
-            monitorDao.delete(monitors);
-            monitorDao.clearObjectCache();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+
     public List<Monitor> getMonitor(){
         List<Monitor> monitors=null;
         try {

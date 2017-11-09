@@ -33,6 +33,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/tvclass_section"
         android:layout_marginTop="15dp"
-        android:divider="@color/divider"
-        android:dividerHeight="1px" />
+        android:groupIndicator="@null"
+        android:divider="@color/md_grey_50"
+        android:dividerHeight="15px" />
 </RelativeLayout>
