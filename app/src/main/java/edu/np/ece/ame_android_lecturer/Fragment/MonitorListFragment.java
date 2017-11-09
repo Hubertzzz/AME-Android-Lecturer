@@ -6,11 +6,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -61,9 +65,10 @@ public class MonitorListFragment extends Fragment {
     private String lesson_id;
     private List<StudentInfo> studentList;
     private String student_id;
-    private String status;
+    //private String status;
     private String student_name;
     private String new_status;
+    private String comment;
 
 
     ExpandableMonitorListAdapter expandableMonitorListAdapter;
@@ -167,7 +172,7 @@ public class MonitorListFragment extends Fragment {
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 student_id=attendanceStatusList.get(groupPosition).getStudent_id();
                 student_name=studentList.get(groupPosition).getName();
-                status=attendanceStatusList.get(groupPosition).getStatus();
+           //     status=attendanceStatusList.get(groupPosition).getStatus();
                 List<String> latemins=new ArrayList<String>();
                 latemins.add(0,"0"); //present
                 latemins.add(1,"-1"); //absent
@@ -184,16 +189,54 @@ public class MonitorListFragment extends Fragment {
                 latemins.add(12,"5400");
 
                 new_status=latemins.get(childPosition);
-                updateStatus();
+                PopUpDialogBox();
+            //    String text=comment;
 
                 return true;
             }
         });
     }
 
+    public void PopUpDialogBox(){
+        final EditText inputServer = new EditText(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Comment Field").setIcon(android.R.drawable.ic_menu_edit).setView(inputServer)
+                .setNegativeButton("Cancel", null);
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+
+                comment=inputServer.getText().toString();
+                updateStatus();
+
+            }
+
+        });
+        builder.show();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showInputMethod();
+            }
+        },100);
+
+
+    }
+    private void showInputMethod() {
+        //自动弹出键盘
+        InputMethodManager inputManager=(InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+        //强制隐藏Android输入法窗口
+        // inputManager.hideSoftInputFromWindow(edit.getWindowToken(),0);
+    }
+
+    
 
     public void updateStatus(){
         try {
+            Preferences.showLoading(getActivity(), "Comment Field", "Sending comment to server...");
+
             SharedPreferences pref = getActivity().getSharedPreferences(Preferences.SharedPreferencesTag, Preferences.SharedPreferences_ModeTag);
             String auCode = pref.getString("authorizationCode", null);
 
@@ -202,23 +245,15 @@ public class MonitorListFragment extends Fragment {
             toUp.addProperty("lesson_date_id",lesson_date_id);
             toUp.addProperty("student_id",student_id);
             toUp.addProperty("status",new_status);
-
+            toUp.addProperty("remark",comment);
             Call<String> call=client.updateStatus(toUp);
             call.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
                     if(response.body().contains("success")){
-                        //get new status & student id
-                       /* if(status.equals("1")){
-                            Toast.makeText(getActivity().getBaseContext(),"Update attendance status of Student "+student_name+" to Present Successfully",Toast.LENGTH_SHORT).show();
-
-                        }
-                        if(status.equals("0")){
-                            Toast.makeText(getActivity().getBaseContext(),"Update attendance status of Student "+student_name+" to Absent Successfully",Toast.LENGTH_SHORT).show();
-
-                        }
-*/
                         listAttendance();
+                       // Toast.makeText(getActivity().getBaseContext(),response.body(),Toast.LENGTH_SHORT).show();
+
 
                     }else if(response.body().contains("failed")){
                         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -249,6 +284,8 @@ public class MonitorListFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Preferences.dismissLoading();
+        Toast.makeText(getActivity().getBaseContext(),"Update ["+student_name+"] 's attendance successfully. ",Toast.LENGTH_SHORT).show();
     }
     public void listStudent(){
         try {
@@ -384,9 +421,6 @@ public class MonitorListFragment extends Fragment {
         }else {
             lesson_date_id="";
         }
-
-       // lesson_date_id="32699"; //没有attendance list的课 未来的课
-
 
         listAttendance();
 
