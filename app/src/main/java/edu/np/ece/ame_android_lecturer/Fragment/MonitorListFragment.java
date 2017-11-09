@@ -20,9 +20,12 @@ import com.google.gson.JsonObject;
 
 import org.w3c.dom.Text;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import edu.np.ece.ame_android_lecturer.Adapter.ExpandableMonitorListAdapter;
@@ -365,7 +368,6 @@ public class MonitorListFragment extends Fragment {
         myView= inflater.inflate(R.layout.fragment_monitor_list, container, false);
 
         tvlesson_name = (TextView)myView.findViewById(R.id.tvlesson_name);
-
         tvclass_section = (TextView)myView.findViewById(R.id.tvclass_section);
 
 
@@ -373,16 +375,15 @@ public class MonitorListFragment extends Fragment {
 
 
         monitors = manager.getMonitor();//det data
-        String Ldate=monitors.get(0).getLdate();
-        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String tDate = sDateFormat.format(new java.util.Date());
-        if(tDate.equals(Ldate)){
+        if(monitors.size()!=0){
+            String Ldate=monitors.get(0).getLdate();
+            SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String tDate = sDateFormat.format(new java.util.Date());
             lesson_date_id=monitors.get(0).getLesson_date_id();
-        }
-        else {
+
+        }else {
             lesson_date_id="";
         }
-
 
        // lesson_date_id="32699"; //没有attendance list的课 未来的课
 

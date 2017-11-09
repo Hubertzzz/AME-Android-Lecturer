@@ -56,12 +56,21 @@ public class DatabaseManager {
         }
     }
 
+    private DatabaseHelper getHelper() {
+
+        return helper;
+    }
+
     public void deleteMonitor(){
         try {
             /*for(int i=0;i<monitors.size();i++){
                 monitorDao.deleteById(i);
             }*/
-            monitorDao.deleteById(0);
+            //monitorDao.delete();
+            helper = getHelper();
+            monitorDao = helper.getDao(Monitor.class);
+            monitorDao.queryRaw("delete from monitor");
+            monitorDao.queryRaw("update sqlite_sequence SET seq = 0 where name ='monitor'");
 
         } catch (java.sql.SQLException e) {
             e.printStackTrace();
