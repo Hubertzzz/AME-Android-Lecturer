@@ -9,7 +9,7 @@
         android:id="@+id/group_list"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:divider="@color/divider"
-        android:dividerHeight="1px" />
+        android:divider="@color/md_grey_100"
+        android:dividerHeight="15px" />
 
 </FrameLayout>

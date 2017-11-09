@@ -21,11 +21,12 @@
         android:layout_width="match_parent"
         android:layout_height="54dp" />
 
-    <ListView
+    <ExpandableListView
         android:id="@+id/list_timeslot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@color/divider"
+        android:divider="@color/md_grey_50"
+        android:groupIndicator="@null"
         android:layout_weight="1"
-        android:dividerHeight="1px" />
+        android:dividerHeight="15px" />
 </LinearLayout>
