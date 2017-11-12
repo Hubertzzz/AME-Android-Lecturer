@@ -51,6 +51,8 @@ public class AttendanceTakenFragment extends Fragment {
 
     private List<TimetableResult> timetableList;
 
+//    OnCallbackReceived mCallBack;
+
     private ArrayList<String> datas = new ArrayList<>();
 
     private List LessonDateList;
@@ -259,7 +261,23 @@ public class AttendanceTakenFragment extends Fragment {
         return myView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+    /*private interface OnCallbackReceived {
+        public void SendText(String text);
+
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try{
+            mCallBack = (OnCallbackReceived) activity;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void */
+// TODO: Rename method, update argument and hook method into UI event
 
 
 

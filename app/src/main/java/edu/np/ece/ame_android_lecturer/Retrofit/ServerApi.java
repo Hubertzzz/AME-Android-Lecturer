@@ -7,7 +7,6 @@ import com.google.gson.JsonObject;
 
 import java.util.List;
 
-import edu.np.ece.ame_android_lecturer.Model.DateOfaLesson;
 import edu.np.ece.ame_android_lecturer.Model.LessonDate;
 import edu.np.ece.ame_android_lecturer.Model.ListAttendanceStatus;
 import edu.np.ece.ame_android_lecturer.Model.LoginInfo;
@@ -54,6 +53,9 @@ public interface ServerApi {
 
     @POST("attendance/update-status")
     Call<String> updateStatus(@Body JsonObject toUp);
+
+    @POST("beacon-attendance-lecturer/student-attendance")
+    Call<String> createLecturerAttendance(@Body JsonObject obj);
 
 
 
