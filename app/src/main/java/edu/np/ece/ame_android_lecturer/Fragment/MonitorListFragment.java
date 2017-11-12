@@ -1,6 +1,7 @@
 package edu.np.ece.ame_android_lecturer.Fragment;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +17,8 @@ import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 
+import org.w3c.dom.Text;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -24,6 +27,8 @@ import edu.np.ece.ame_android_lecturer.LogInActivity;
 import edu.np.ece.ame_android_lecturer.Model.ListAttendanceStatus;
 import edu.np.ece.ame_android_lecturer.Model.StudentInfo;
 import edu.np.ece.ame_android_lecturer.NavigationActivity;
+import edu.np.ece.ame_android_lecturer.OrmLite.DatabaseManager;
+import edu.np.ece.ame_android_lecturer.OrmLite.Monitor;
 import edu.np.ece.ame_android_lecturer.Preferences;
 import edu.np.ece.ame_android_lecturer.R;
 import edu.np.ece.ame_android_lecturer.Retrofit.ServerApi;
@@ -52,6 +57,10 @@ public class MonitorListFragment extends Fragment {
     private String status;
     private String student_name;
     MonitorListAdapter monitorListAdapter;
+    DatabaseManager manager;
+    TextView tvlesson_name;
+    TextView tvclass_section;
+    List<Monitor> monitors;
 
 
     public MonitorListFragment() {
@@ -82,7 +91,9 @@ public class MonitorListFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+
         }
+
 
 
 
@@ -203,8 +214,8 @@ public class MonitorListFragment extends Fragment {
                         studentList=response.body();
                         if(studentList==null){
                             final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                            builder.setTitle("ERROR");
-                            builder.setMessage("Cannot find student list");
+                            builder.setTitle("Detect another login.");
+                            builder.setMessage("You will automatically sign out. Click here to sign in again.");
                             builder.setPositiveButton("OK",
                                     new DialogInterface.OnClickListener() {
                                         @Override
@@ -250,7 +261,7 @@ public class MonitorListFragment extends Fragment {
             // 需要输入当前课的lesson_date_id
 
 
-            lesson_date_id="32689";
+          //  lesson_date_id="32689";
 
             object.addProperty("lesson_date_id",lesson_date_id);
 
@@ -264,22 +275,27 @@ public class MonitorListFragment extends Fragment {
                         attendanceStatusList=response.body();
                         if(attendanceStatusList==null){
                             final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                            builder.setTitle("ERROR");
-                            builder.setMessage("Cannot find student list");
+                            builder.setTitle("Not at the time");
+                            builder.setMessage("The class haven't begin.");
                             builder.setPositiveButton("OK",
                                     new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(final DialogInterface dialogInterface, final int i) {
                                             Preferences.clearLecturerInfo();
-                                            Intent intent = new Intent(getActivity(), LogInActivity.class);
+                                            Intent intent = new Intent(getActivity(), NavigationActivity.class);
                                             startActivity(intent);
                                             getActivity().finish();
                                         }
                                     });
                             builder.create().show();
+
+
+
                         }
                         else {
                             initAttendanceList();
+                            tvlesson_name.setText(monitors.get(0).getSubjectarea()+" "+monitors.get(0).getModule());
+                            tvclass_section.setText(monitors.get(0).getClass_section());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -297,7 +313,27 @@ public class MonitorListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         myView= inflater.inflate(R.layout.fragment_monitor_list, container, false);
+
+        tvlesson_name = (TextView)myView.findViewById(R.id.tvlesson_name);
+
+        tvclass_section = (TextView)myView.findViewById(R.id.tvclass_section);
+
+
+        manager = new DatabaseManager(getActivity());
+
+
+        monitors = manager.getMonitor();//det data
+
+        lesson_date_id=monitors.get(0).getLesson_date_id();
+       // lesson_date_id="32699"; //没有attendance list的课 未来的课
+     //   manager.deleteMonitor(); //clear odd data
+
+
+
         listAttendance();
+
+
+
         return myView;
     }
 

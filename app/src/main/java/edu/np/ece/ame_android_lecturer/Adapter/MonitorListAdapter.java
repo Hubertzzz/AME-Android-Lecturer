@@ -65,15 +65,15 @@ public class MonitorListAdapter extends ArrayAdapter {
         status=data.get(position).getStatus();
         if(status.equals("-1")){
             //absent
-            holder.imgcheckbox.setImageResource(R.drawable.ic_check_box_outline_blank_black_24dp);
+            holder.imgcheckbox.setImageResource(R.drawable.circle_red_32);
         }
         else if(status.equals("0")){
             //present
-            holder.imgcheckbox.setImageResource(R.drawable.ic_check_box_black_24dp);
+            holder.imgcheckbox.setImageResource(R.drawable.circle_green_32);
         }
         else {
             //late
-            holder.imgcheckbox.setImageResource(R.drawable.ic_check_box_black_24dp);
+            holder.imgcheckbox.setImageResource(R.drawable.circle_orange_32);
         }
 
 

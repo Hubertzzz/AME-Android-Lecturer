@@ -7,4 +7,6 @@
         <item>Student List</item>
         <item>Attendance</item>
     </string-array>
+    <string name="no_lesson_now">No lesson to monitor</string>
+    <string name="now"> for now </string>
 </resources>

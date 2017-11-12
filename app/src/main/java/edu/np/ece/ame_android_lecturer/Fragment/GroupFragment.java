@@ -135,8 +135,8 @@ public class GroupFragment extends Fragment {
                         timetableList = response.body();
                         if (timetableList == null) {
                             final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                            builder.setTitle("error");
-                            builder.setMessage("Can't find your schedules.");
+                            builder.setTitle("Detect another login.");
+                            builder.setMessage("You will automatically sign out. Click here to sign in again.");
                             builder.setPositiveButton("OK",
                                     new DialogInterface.OnClickListener() {
                                         @Override
