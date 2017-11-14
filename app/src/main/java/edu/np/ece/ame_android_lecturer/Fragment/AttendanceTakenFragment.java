@@ -156,7 +156,7 @@ public class AttendanceTakenFragment extends Fragment {
                          //   AddLessondate();
 
 
-                            for(int i = 0 ; i < timetableList.size(); i++){
+                       loop:     for(int i = 0 ; i < timetableList.size(); i++){
                                 for(int e=0; e< timetableList.get(i).getLesson_date().size();e++){
                                     if(tDate.equals(timetableList.get(i).getLesson_date().get(e).getLdate())){
                                         aModuleSec = String.valueOf(timetableList.get(i).getLesson().getSubject_area());
@@ -213,7 +213,6 @@ public class AttendanceTakenFragment extends Fragment {
 
 
 
-
                                         String aStartTime = String.valueOf(timetableList.get(i).getLesson().getStart_time());
                                         String aEndTime = String.valueOf(timetableList.get(i).getLesson().getEnd_time());
                                         tvTime.setText(aStartTime+" - "+aEndTime);
@@ -245,7 +244,7 @@ public class AttendanceTakenFragment extends Fragment {
                                             BeaconParser beaconParser = new BeaconParser()
                                                     .setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24");
                                             beaconTransmitter = new BeaconTransmitter(getActivity().getBaseContext(),beaconParser);
-                                            break;
+                                            break loop;
                                         }
 
 
@@ -254,7 +253,10 @@ public class AttendanceTakenFragment extends Fragment {
                                         Monitor monitor=new Monitor();
                                         monitorDao.deleteMonitor();
                                         List<Monitor> monitors=monitorDao.getMonitor();
-                                        tvClass.setText("no lesson");
+                                        tvClass.setText("for this time");
+                                        tvModule.setText("No lesson");
+                                        tvTime.setText("");
+                                        tvVenue.setText("");
                                     }
 
                                 }

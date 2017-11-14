@@ -20,14 +20,8 @@ import java.util.List;
 
 import edu.np.ece.ame_android_lecturer.Adapter.TimetableListAdapter;
 import edu.np.ece.ame_android_lecturer.LogInActivity;
-import edu.np.ece.ame_android_lecturer.Model.Lesson;
-import edu.np.ece.ame_android_lecturer.Model.LessonBeacon;
 import edu.np.ece.ame_android_lecturer.Model.LessonDate;
 import edu.np.ece.ame_android_lecturer.Model.TimetableResult;
-import edu.np.ece.ame_android_lecturer.Model.Venue;
-import edu.np.ece.ame_android_lecturer.OrmLite.DatabaseManager;
-import edu.np.ece.ame_android_lecturer.OrmLite.Subject;
-import edu.np.ece.ame_android_lecturer.OrmLite.SubjectDateTime;
 import edu.np.ece.ame_android_lecturer.Preferences;
 import edu.np.ece.ame_android_lecturer.R;
 import edu.np.ece.ame_android_lecturer.Retrofit.ServerApi;
@@ -57,9 +51,9 @@ public class TimetableFragment extends Fragment {
     private List<Integer> itemType = new ArrayList<>();
 
     private List<LessonDate> lessonDatesResult=new ArrayList<>();
+    private List<String> lessonWeekdayResult=new ArrayList<>();
     private List<LessonDate> lessonDateList=new ArrayList<>();
-
-
+    List<String> weekday=new ArrayList<>();
     public TimetableFragment() {
         // Required empty public constructor
     }
@@ -88,7 +82,7 @@ public class TimetableFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(dateFormat.format(calendar.getTime()));
     }
 
-    private boolean isOnDifferentDate(LessonDate temp1, LessonDate temp2) {
+    /*private boolean isOnDifferentDate(LessonDate temp1, LessonDate temp2) {
 
         if (temp1.getLdate().compareToIgnoreCase(temp2.getLdate()) == 0) {
             return false;
@@ -99,34 +93,59 @@ public class TimetableFragment extends Fragment {
         data.add(subject);
         lessonDateList.add(date);
         itemType.add(type);
-    }
+    }*/
 
+    private boolean isOnDifferentDate(String temp1, String temp2) {
+
+        if (temp1.equals(temp2)) {
+            return false;
+        }
+        return true;
+    }
+    private void addItem(TimetableResult subject, Integer type,String weektype) {
+        data.add(subject);
+        itemType.add(type);
+        lessonWeekdayResult.add(weektype);
+    }
 
     private void initTimetableList() {
         try {
             final ListView listView = (ListView) myView.findViewById(R.id.timetable_list);
+            weekday.add(0,"none2");
+            weekday.add(1,"none1");
+            weekday.add(2,"Monday");
+            weekday.add(3,"Tuesday");
+            weekday.add(4,"Wednesday");
+            weekday.add(5,"Thursday");
+            weekday.add(6,"Friday");
+            weekday.add(7,"Saturday");
 
             for (int i = 0; i <timetableList.size(); i++) {
-                lessonDatesResult=timetableList.get(i).getLesson_date();
-                /*for(int n=0;n<lessonDatesResult.size();n++){
-                    if (i == 0 || isOnDifferentDate(lessonDatesResult.get(n), lessonDatesResult.get(n - 1))) {
-                        addItem(timetableList.get(i),lessonDatesResult.get(n), Preferences.LIST_ITEM_TYPE_1);
-                    }
-                    addItem(timetableList.get(i),lessonDatesResult.get(n), Preferences.LIST_ITEM_TYPE_2);
-                }*/
+                //lessonDatesResult=timetableList.get(i).getLesson_date();
+                int day=Integer.parseInt(timetableList.get(i).getLesson().getWeekday());
 
-                if (i == 0 || isOnDifferentDate(timetableList.get(i).getLesson_date().get(i), timetableList.get(i - 1).getLesson_date().get(i))) {
+
+
+               /* if (i == 0 || isOnDifferentDate(timetableList.get(i).getLesson_date().get(i), timetableList.get(i - 1).getLesson_date().get(i))) {
+
                     addItem(timetableList.get(i),timetableList.get(i).getLesson_date().get(i), Preferences.LIST_ITEM_TYPE_1);
                 }
                 addItem(timetableList.get(i),timetableList.get(i).getLesson_date().get(i), Preferences.LIST_ITEM_TYPE_2);
+                */
+                if (i == 0 || isOnDifferentDate(timetableList.get(i).getLesson().getWeekday(),timetableList.get(i-1).getLesson().getWeekday())) {
+                    addItem(timetableList.get(i), Preferences.LIST_ITEM_TYPE_1,weekday.get(day));
+
+                }
+                addItem(timetableList.get(i), Preferences.LIST_ITEM_TYPE_2,weekday.get(day));
+
 
             }
 
 
-            TimetableListAdapter adapter = new TimetableListAdapter(context, R.layout.item_subject, R.layout.item_week_day,data,lessonDateList,itemType);
+
+            TimetableListAdapter adapter = new TimetableListAdapter(context, R.layout.item_subject, R.layout.item_week_day,data,lessonWeekdayResult,itemType);
             listView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
-
 
 
         } catch (Exception e) {
