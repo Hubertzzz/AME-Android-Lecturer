@@ -3,12 +3,9 @@ package edu.np.ece.ame_android_lecturer.Fragment;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,13 +23,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import edu.np.ece.ame_android_lecturer.Adapter.MonitorListAdapter;
 import edu.np.ece.ame_android_lecturer.Model.Lesson;
 import edu.np.ece.ame_android_lecturer.Model.LessonDate;
 import edu.np.ece.ame_android_lecturer.Model.TimetableResult;
 import edu.np.ece.ame_android_lecturer.OrmLite.DatabaseManager;
 import edu.np.ece.ame_android_lecturer.OrmLite.Monitor;
-import edu.np.ece.ame_android_lecturer.OrmLite.Subject;
 import edu.np.ece.ame_android_lecturer.Preferences;
 import edu.np.ece.ame_android_lecturer.R;
 import edu.np.ece.ame_android_lecturer.Retrofit.ServerApi;
@@ -81,6 +76,7 @@ public class AttendanceTakenFragment extends Fragment {
     private String aClass;
     private String aModule;
     private String aModuleSec;
+    private String aLDate;
 
 
     private DatabaseManager monitorDao;
@@ -161,6 +157,7 @@ public class AttendanceTakenFragment extends Fragment {
                             for(int i = 0 ; i < timetableList.size(); i++){
                                 for(int e=0; e< timetableList.get(i).getLesson_date().size();e++){
                                     if(tDate.equals(timetableList.get(i).getLesson_date().get(e).getLdate())){
+                                        aLDate = String.valueOf(timetableList.get(i).getLesson_date().get(e).getLdate());
                                         aModuleSec = String.valueOf(timetableList.get(i).getLesson().getSubject_area());
                                         aModule = String.valueOf(timetableList.get(i).getLesson().getCatalog_number());
                                         tvModule.setText(aModuleSec + " " + aModule);
@@ -188,6 +185,7 @@ public class AttendanceTakenFragment extends Fragment {
                                         edt.putString("class",aClass);
                                         edt.commit();*/
                                         String date=timetableList.get(i).getLesson_date().get(e).getId();
+                                        String Uuid = timetableList.get(i).getLessonBeacon().getUuid();
 
                                         monitorDao= new DatabaseManager(getActivity());
 
@@ -197,12 +195,9 @@ public class AttendanceTakenFragment extends Fragment {
                                         monitor.setSubjectarea(aModuleSec);
                                         monitor.setClass_section(aClass);
                                         monitor.setLesson_date_id(date);
-                                        monitorDao.addMonitor(monitor);
+                                        monitor.setL_Date(aLDate);
+                                        monitor.setUuid(Uuid);
 
-                                        DatabaseManager manager=new DatabaseManager(getActivity());
-                                        Monitor monitor1=new Monitor();
-                                     //   manager.deleteMonitor(); //clear odd data
-                                        List<Monitor> monitors= manager.getMonitor(); //det data
 
 
 
@@ -217,6 +212,17 @@ public class AttendanceTakenFragment extends Fragment {
                                         String aVenue = String.valueOf(timetableList.get(i).getVenue().getLocation());
                                         tvVenue.setText("#"+aVenue);
                                         datas.add(aVenue);
+
+                                        monitor.setStart_time(aStartTime);
+                                        monitor.setEnd_time(aEndTime);
+
+
+                                        monitorDao.addMonitor(monitor);
+
+                                        DatabaseManager manager=new DatabaseManager(getActivity());
+                                        Monitor monitor1=new Monitor();
+                                        //   manager.deleteMonitor(); //clear odd data
+                                        List<Monitor> monitors= manager.getMonitor(); //det data
 
 
                                         Date TimeNow = new Date();
