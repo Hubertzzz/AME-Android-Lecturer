@@ -19,6 +19,7 @@ public class DatabaseManager {
     private DatabaseHelper helper;
 
     static private DatabaseManager instance;
+
     public DatabaseManager(Context context){
         this.context=context;
         helper=DatabaseHelper.getInstance(context);
@@ -55,14 +56,28 @@ public class DatabaseManager {
         }
     }
 
+    private DatabaseHelper getHelper() {
+
+        return helper;
+    }
+
     public void deleteMonitor(){
         try {
-           // monitorDao.delete(getMonitor()); //delete all datas 如果用户没有先点击now page，就存不进去
-            monitorDao.deleteById(0);
+            /*for(int i=0;i<monitors.size();i++){
+                monitorDao.deleteById(i);
+            }*/
+            //monitorDao.delete();
+           //删除数据库所有数据
+            helper = getHelper();
+            monitorDao = helper.getDao(Monitor.class);
+            monitorDao.queryRaw("delete from monitor");
+            monitorDao.queryRaw("update sqlite_sequence SET seq = 0 where name ='monitor'");
+
         } catch (java.sql.SQLException e) {
             e.printStackTrace();
         }
     }
+
     public List<Monitor> getMonitor(){
         List<Monitor> monitors=null;
         try {

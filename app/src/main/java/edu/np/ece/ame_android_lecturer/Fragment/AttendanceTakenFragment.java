@@ -76,10 +76,13 @@ public class AttendanceTakenFragment extends Fragment {
     private String aClass;
     private String aModule;
     private String aModuleSec;
+<<<<<<< HEAD
     private String aLDate;
+=======
+    private String Ldate;
+>>>>>>> refs/remotes/origin/master
 
 
-    private DatabaseManager monitorDao;
 
     //private String aStartTime,aEndTime;
 
@@ -172,6 +175,7 @@ public class AttendanceTakenFragment extends Fragment {
                                         datas.add(aClass);
 
 
+                                        Ldate = timetableList.get(i).getLesson_date().get(e).getLdate()+" "+timetableList.get(i).getLesson().getStart_time();
 
                                        /* Fragment fragment=new MonitorListFragment();
                                         Bundle bundle= new Bundle();
@@ -187,19 +191,34 @@ public class AttendanceTakenFragment extends Fragment {
                                         String date=timetableList.get(i).getLesson_date().get(e).getId();
                                         String Uuid = timetableList.get(i).getLessonBeacon().getUuid();
 
-                                        monitorDao= new DatabaseManager(getActivity());
+                                        DatabaseManager monitorDao= new DatabaseManager(getActivity());
 
                                         Monitor monitor=new Monitor();
                                         monitorDao.deleteMonitor(); //clear odd
+
+                                      /*  List<Monitor> monitors=new ArrayList<Monitor>();
+                                        monitors=monitorDao.getMonitor();
+                                       //for testing delete odd data */
+
                                         monitor.setModule(aModule);
                                         monitor.setSubjectarea(aModuleSec);
                                         monitor.setClass_section(aClass);
                                         monitor.setLesson_date_id(date);
+<<<<<<< HEAD
                                         monitor.setL_Date(aLDate);
                                         monitor.setUuid(Uuid);
 
+=======
+                                        monitor.setLdate(Ldate);
+
+                                        monitorDao.addMonitor(monitor);
+>>>>>>> refs/remotes/origin/master
 
 
+                                      /*  DatabaseManager manager=new DatabaseManager(getActivity());
+                                        manager.deleteMonitor(); //clear odd data
+                                        List<Monitor> monitors1= manager.getMonitor(); //det data
+*/
 
 
 
@@ -250,8 +269,14 @@ public class AttendanceTakenFragment extends Fragment {
                                         }
 
 
-
+                                    }else {
+                                        DatabaseManager monitorDao= new DatabaseManager(getActivity());
+                                        Monitor monitor=new Monitor();
+                                        monitorDao.deleteMonitor();
+                                        List<Monitor> monitors=monitorDao.getMonitor();
+                                        tvClass.setText("no lesson");
                                     }
+
                                 }
 
 
@@ -294,14 +319,14 @@ public class AttendanceTakenFragment extends Fragment {
     }
 
 
-    public void AddLessondate(){
+    /*public void AddLessondate(){
         for(int i=0;i<timetableList.size();i++){
             lessonDatesResult=timetableList.get(i).getLesson_date();
             weeklylesson.add(timetableList.get(i).getLesson());
             weeklydate.add(timetableList.get(i).getLesson_date().get(i));
 
         }
-    }
+    }*/
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

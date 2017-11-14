@@ -6,22 +6,29 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
+import com.google.gson.internal.Streams;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import edu.np.ece.ame_android_lecturer.Adapter.ExpandableMonitorListAdapter;
 import edu.np.ece.ame_android_lecturer.Adapter.MonitorListAdapter;
 import edu.np.ece.ame_android_lecturer.LogInActivity;
 import edu.np.ece.ame_android_lecturer.Model.LessonDate;
@@ -52,14 +59,21 @@ public class AttendanceHistoryListFragment extends Fragment {
     private List<LessonDate> dateList;
     private List<String> ldatelist=new ArrayList<>();
     private ArrayAdapter<String> arrayAdapter;
-    MonitorListAdapter monitorListAdapter;
+    ExpandableMonitorListAdapter monitorListAdapter;
     private  String lesson_date_id;
     private List<ListAttendanceStatus> attendanceStatusList;
 
     private List<StudentInfo> studentList;
     private String student_id;
     private String status;
+    private String new_status;
     private String student_name;
+    private String comment;
+
+    List<List<String>> expandedData;
+    List<ListAttendanceStatus> group;
+    List<String> choice;
+
 
     public AttendanceHistoryListFragment() {
         // Required empty public constructor
@@ -224,29 +238,111 @@ public class AttendanceHistoryListFragment extends Fragment {
             e.printStackTrace();
         }
     }
+    public void addgroup(){
+        for(int i=0;i<attendanceStatusList.size();i++){
+            group.add(attendanceStatusList.get(i));
+            expandedData.add(choice);//每有一个group item 就新添加一组choice数组
+        }
+
+    }
 
     public void initStudentlist(){
-        final ListView listView = (ListView) myView.findViewById(R.id.list_timeslot);
-        monitorListAdapter = new MonitorListAdapter(getActivity(),R.layout.item_monitor_list,attendanceStatusList,studentList);
+        final ExpandableListView listView = (ExpandableListView) myView.findViewById(R.id.list_timeslot);
+
+
+        expandedData=new ArrayList<List<String>>();
+        group=new ArrayList<>();
+
+
+        choice = new ArrayList<>();
+        choice.add(0,"Present");
+        choice.add(1,"Absent");
+        choice.add(2,"5 mins late");
+        choice.add(3,"10 mins late");
+        choice.add(4,"15 mins late");
+        choice.add(5,"20 mins late");
+        choice.add(6,"25 mins late");
+        choice.add(7,"30 mins late");
+        choice.add(8,"35 mins late");
+        choice.add(9,"40 mins late");
+        choice.add(10,"45 mins late");
+        choice.add(11,"1 hour late");
+        choice.add(12,"more than 1 hour late");
+
+        addgroup();
+
+
+        Collections.reverse(attendanceStatusList);
+        monitorListAdapter = new ExpandableMonitorListAdapter(getActivity(),R.layout.item_monitor_list,attendanceStatusList,studentList,expandedData);
         listView.setAdapter(monitorListAdapter);
         monitorListAdapter.notifyDataSetChanged();
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //得到所点击的student id
-                student_id=attendanceStatusList.get(position).getStudent_id();
-                student_name=studentList.get(position).getName();
-                status=attendanceStatusList.get(position).getStatus();
-                updateStatus();
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                student_id=attendanceStatusList.get(groupPosition).getStudent_id();
+                student_name=studentList.get(groupPosition).getName();
+                status=attendanceStatusList.get(groupPosition).getStatus();
+                List<String> latemins=new ArrayList<String>();
+                latemins.add(0,"0"); //present
+                latemins.add(1,"-1"); //absent
+                latemins.add(2,"300"); //5
+                latemins.add(3,"600"); //10
+                latemins.add(4,"900");//15
+                latemins.add(5,"1200");//20
+                latemins.add(6,"1500");//25
+                latemins.add(7,"1800");//30
+                latemins.add(8,"2100");//35
+                latemins.add(9,"2400");//40
+                latemins.add(10,"2700");//45
+                latemins.add(11,"3600");// 1 hour
+                latemins.add(12,"5400");
 
-                Toast.makeText(getActivity().getBaseContext(),attendanceStatusList.get(position).getStudent_id(),Toast.LENGTH_SHORT).show();
+                new_status=latemins.get(childPosition);
+                PopUpDialogBox();
+          //      Toast.makeText(getActivity().getBaseContext(),attendanceStatusList.get(groupPosition).getStudent_id(),Toast.LENGTH_SHORT).show();
+                return true;
             }
         });
     }
 
+    public void PopUpDialogBox(){
+        final EditText inputServer = new EditText(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Comment Field").setIcon(android.R.drawable.ic_menu_edit).setView(inputServer)
+                .setNegativeButton("Cancel", null);
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+
+                comment=inputServer.getText().toString();
+                updateStatus();
+
+            }
+
+        });
+        builder.show();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showInputMethod();
+            }
+        },100);
+
+    }
+    private void showInputMethod() {
+        //自动弹出键盘
+        InputMethodManager inputManager=(InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+        //强制隐藏Android输入法窗口
+        // inputManager.hideSoftInputFromWindow(edit.getWindowToken(),0);
+    }
+
     public void updateStatus(){
         try {
+            Preferences.showLoading(getActivity(), "Comment Field", "Sending comment to server...");
+
             SharedPreferences pref = getActivity().getSharedPreferences(Preferences.SharedPreferencesTag, Preferences.SharedPreferences_ModeTag);
             String auCode = pref.getString("authorizationCode", null);
 
@@ -254,28 +350,13 @@ public class AttendanceHistoryListFragment extends Fragment {
             JsonObject toUp = new JsonObject();
             toUp.addProperty("lesson_date_id",lesson_date_id);
             toUp.addProperty("student_id",student_id);
-            if(status.equals("-1")){
-                toUp.addProperty("status",0);
-            }
-            if(status.equals("0")){
-                toUp.addProperty("status",-1);
-            }
-            //toggle status (需要给status 复制 现在为空)
-
+            toUp.addProperty("status",new_status);
+            toUp.addProperty("remark",comment);
             Call<String> call=client.updateStatus(toUp);
             call.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
                     if(response.body().contains("success")){
-                        //get new status & student id
-                        if(status.equals("1")){
-                            Toast.makeText(getActivity().getBaseContext(),"Update attendance status of Student "+student_name+" to Present Successfully",Toast.LENGTH_SHORT).show();
-
-                        }
-                        if(status.equals("0")){
-                            Toast.makeText(getActivity().getBaseContext(),"Update attendance status of Student "+student_name+" to Absent Successfully",Toast.LENGTH_SHORT).show();
-
-                        }
 
                         LoadList();
 
@@ -309,6 +390,8 @@ public class AttendanceHistoryListFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Preferences.dismissLoading();
+        Toast.makeText(getActivity().getBaseContext(),"Update ["+student_name+"] 's attendance successfully. ",Toast.LENGTH_SHORT).show();
     }
 
     public void LoadList(){
