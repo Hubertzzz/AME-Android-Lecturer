@@ -231,7 +231,7 @@ public class MonitorListFragment extends Fragment {
         // inputManager.hideSoftInputFromWindow(edit.getWindowToken(),0);
     }
 
-    
+
 
     public void updateStatus(){
         try {
