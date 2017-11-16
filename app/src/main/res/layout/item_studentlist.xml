@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingTop="10dp"
-    android:textAlignment="center">
+    >
 
 
     <LinearLayout
@@ -29,8 +29,7 @@
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:layout_weight="2"
-            android:layout_gravity="left"
-            android:textAlignment="center"
+            android:textAlignment="textStart"
             android:text="YOO YOO"
             android:textAppearance="@android:style/TextAppearance.Material"
             android:textSize="18sp" />
@@ -41,9 +40,9 @@
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:layout_weight="1"
-            android:paddingLeft="100dp"
+            android:textAlignment="textEnd"
+            android:paddingEnd="10dp"
             android:text="s101ejdsxm"
-            android:textAlignment="center"
             android:textAppearance="@android:style/TextAppearance.Material"
             android:textSize="18sp" />
 

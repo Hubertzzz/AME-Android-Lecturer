@@ -81,7 +81,7 @@ public class StudentlistFragment extends Fragment {
 
         }
 
-        StudentListAdapter adapter = new StudentListAdapter(getActivity(), R.layout.item_studentlist,stuname,stucard,order);
+        StudentListAdapter adapter = new StudentListAdapter(getActivity(), R.layout.item_studentlist,studentList,stuname,stucard,order);
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
@@ -161,25 +161,27 @@ public class StudentlistFragment extends Fragment {
         return myView;
     }
 
-    public class StudentListAdapter extends ArrayAdapter {
+    public class StudentListAdapter extends ArrayAdapter<StudentInfo> {
         Context context;
         int layoutResourceId;
         List<String> name;
         List<String> card;
         List<String> order;
+        List<StudentInfo> studentInfoList;
 
-        public StudentListAdapter(Context context,int layoutResourceId,List<String> name,List<String> card,List<String>order) {
-            super(context, layoutResourceId, name);
+        public StudentListAdapter(Context context,int layoutResourceId,List<StudentInfo> studentInfoList,List<String> name,List<String> card,List<String>order) {
+            super(context, layoutResourceId, studentInfoList);
             this.card=card;
             this.name=name;
             this.context=context;
             this.layoutResourceId=layoutResourceId;
+            this.studentInfoList=studentInfoList;
             this.order=order;
         }
 
         @Override
         public int getCount() {
-            return name == null ? 0 : name.size();
+            return studentInfoList == null ? 0 : studentInfoList.size();
         }
 
         @Override
@@ -193,7 +195,7 @@ public class StudentlistFragment extends Fragment {
                 holder.tvname=(TextView)row.findViewById(R.id.tvstu_name);
                 holder.tvcard=(TextView)row.findViewById(R.id.tvstu_card);
                 holder.tvorder=(TextView)row.findViewById(R.id.tvstu_order);
-
+                row.setTag(holder);
             }else {
                 holder=(StudentListAdapter.Holder)row.getTag();
             }
