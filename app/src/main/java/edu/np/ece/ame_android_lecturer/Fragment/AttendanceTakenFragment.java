@@ -3,16 +3,13 @@ package edu.np.ece.ame_android_lecturer.Fragment;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,13 +23,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import edu.np.ece.ame_android_lecturer.Adapter.MonitorListAdapter;
 import edu.np.ece.ame_android_lecturer.Model.Lesson;
 import edu.np.ece.ame_android_lecturer.Model.LessonDate;
 import edu.np.ece.ame_android_lecturer.Model.TimetableResult;
 import edu.np.ece.ame_android_lecturer.OrmLite.DatabaseManager;
 import edu.np.ece.ame_android_lecturer.OrmLite.Monitor;
-import edu.np.ece.ame_android_lecturer.OrmLite.Subject;
 import edu.np.ece.ame_android_lecturer.Preferences;
 import edu.np.ece.ame_android_lecturer.R;
 import edu.np.ece.ame_android_lecturer.Retrofit.ServerApi;
@@ -58,6 +53,8 @@ public class AttendanceTakenFragment extends Fragment {
 
     private List<TimetableResult> timetableList;
 
+//    OnCallbackReceived mCallBack;
+
     private ArrayList<String> datas = new ArrayList<>();
 
     private List LessonDateList;
@@ -79,7 +76,12 @@ public class AttendanceTakenFragment extends Fragment {
     private String aClass;
     private String aModule;
     private String aModuleSec;
+    int Beaconstatus = 1;
+
+    private String aLDate;
+
     private String Ldate;
+
 
 
 
@@ -120,11 +122,13 @@ public class AttendanceTakenFragment extends Fragment {
     }
 
     private void loadInformation(){
+
         final TextView tvModule = (TextView)myView.findViewById(R.id.tvModule);
         final TextView tvClass = (TextView)myView.findViewById(R.id.tvClass);
         final TextView tvTime = (TextView)myView.findViewById(R.id.tvTime);
         final TextView tvVenue = (TextView)myView.findViewById(R.id.tvVenue);
-        final Button btnStop = (Button)myView.findViewById(R.id.btnStop);
+        final ImageButton btnActivateBeacon = (ImageButton)myView.findViewById(R.id.btnActivateBeacon);
+
         final TextView tvInfo = (TextView)myView.findViewById(R.id.tvInfo);
         Preferences.showLoading(context,"Now Class","Loading data from server...");
         try{
@@ -159,6 +163,7 @@ public class AttendanceTakenFragment extends Fragment {
                        loop:     for(int i = 0 ; i < timetableList.size(); i++){
                                 for(int e=0; e< timetableList.get(i).getLesson_date().size();e++){
                                     if(tDate.equals(timetableList.get(i).getLesson_date().get(e).getLdate())){
+                                        aLDate = String.valueOf(timetableList.get(i).getLesson_date().get(e).getLdate());
                                         aModuleSec = String.valueOf(timetableList.get(i).getLesson().getSubject_area());
                                         aModule = String.valueOf(timetableList.get(i).getLesson().getCatalog_number());
                                         tvModule.setText(aModuleSec + " " + aModule);
@@ -187,6 +192,7 @@ public class AttendanceTakenFragment extends Fragment {
                                         edt.putString("class",aClass);
                                         edt.commit();*/
                                         String date=timetableList.get(i).getLesson_date().get(e).getId();
+                                        String Uuid = timetableList.get(i).getLessonBeacon().getUuid();
 
                                         DatabaseManager monitorDao= new DatabaseManager(getActivity());
 
@@ -201,9 +207,14 @@ public class AttendanceTakenFragment extends Fragment {
                                         monitor.setSubjectarea(aModuleSec);
                                         monitor.setClass_section(aClass);
                                         monitor.setLesson_date_id(date);
+
+                                        monitor.setL_Date(aLDate);
+                                        monitor.setUuid(Uuid);
+
                                         monitor.setLdate(Ldate);
 
                                         monitorDao.addMonitor(monitor);
+
 
 
                                       /*  DatabaseManager manager=new DatabaseManager(getActivity());
@@ -221,6 +232,17 @@ public class AttendanceTakenFragment extends Fragment {
                                         String aVenue = String.valueOf(timetableList.get(i).getVenue().getLocation());
                                         tvVenue.setText("#"+aVenue);
                                         datas.add(aVenue);
+
+                                        monitor.setStart_time(aStartTime);
+                                        monitor.setEnd_time(aEndTime);
+
+
+                                        monitorDao.addMonitor(monitor);
+
+                                        DatabaseManager manager=new DatabaseManager(getActivity());
+                                        Monitor monitor1=new Monitor();
+                                        //   manager.deleteMonitor(); //clear odd data
+                                        List<Monitor> monitors= manager.getMonitor(); //det data
 
 
                                         Date TimeNow = new Date();
@@ -244,7 +266,13 @@ public class AttendanceTakenFragment extends Fragment {
                                             BeaconParser beaconParser = new BeaconParser()
                                                     .setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24");
                                             beaconTransmitter = new BeaconTransmitter(getActivity().getBaseContext(),beaconParser);
+
+                                            tvInfo.setText("Now\n transmitting beacons\n for students");
+                                            btnActivateBeacon.setVisibility(View.VISIBLE);
+                                          
+
                                             break loop;
+
                                         }
 
 
@@ -253,10 +281,14 @@ public class AttendanceTakenFragment extends Fragment {
                                         Monitor monitor=new Monitor();
                                         monitorDao.deleteMonitor();
                                         List<Monitor> monitors=monitorDao.getMonitor();
-                                        tvClass.setText("for this time");
-                                        tvModule.setText("No lesson");
+
+                                        tvClass.setText("no lesson");
+                                        tvModule.setText("");
                                         tvTime.setText("");
                                         tvVenue.setText("");
+                                        tvInfo.setText("");
+                                        btnActivateBeacon.setVisibility(View.INVISIBLE);
+
                                     }
 
                                 }
@@ -280,12 +312,25 @@ public class AttendanceTakenFragment extends Fragment {
                         //}
                         beaconTransmitter.startAdvertising(beaconBuilder.build());
 
-                        btnStop.setOnClickListener(new View.OnClickListener() {
+                        btnActivateBeacon.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                             /*   if(Beaconstatus == 1){*/
                                 beaconTransmitter.stopAdvertising();
                                 Toast.makeText(context,"Stop Advertising.....",Toast.LENGTH_SHORT).show();
                                 tvInfo.setText("Finished Transmiting");
+                                   /* Beaconstatus = 0;*/
+                                btnActivateBeacon.setBackgroundResource(R.drawable.bluetooth_light);
+                                tvInfo.setTextColor(tvInfo.getResources().getColor(R.color.md_amber_800));
+/*                                else{
+                                    beaconTransmitter.startAdvertising(beaconBuilder.build());
+                                    Toast.makeText(context,"Start Advertising.....",Toast.LENGTH_SHORT).show();
+                                    tvInfo.setText("Now\n transmitting beacons\n for students");
+                                    Beaconstatus = 1;
+                                    btnActivateBeacon.setBackgroundResource(R.drawable.bluetooth6);
+                                    tvInfo.setTextColor(tvInfo.getResources().getColor(R.color.green));
+                                }*/
+
                             }
                         });
                     }catch(Exception e){
@@ -325,7 +370,23 @@ public class AttendanceTakenFragment extends Fragment {
         return myView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+    /*private interface OnCallbackReceived {
+        public void SendText(String text);
+
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try{
+            mCallBack = (OnCallbackReceived) activity;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void */
+// TODO: Rename method, update argument and hook method into UI event
 
 
 

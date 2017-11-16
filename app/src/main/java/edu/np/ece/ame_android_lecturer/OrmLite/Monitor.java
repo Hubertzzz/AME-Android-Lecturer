@@ -24,19 +24,37 @@ public class Monitor {
     @DatabaseField
     private String lesson_date_id;
 
+
+    @DatabaseField
+    private String start_time;
+
+    @DatabaseField
+    private String end_time;
+
+    @DatabaseField
+    private String L_Date;
+
+    @DatabaseField
+    private String Uuid;
+
     @DatabaseField (columnName = "Ldate")
     private String Ldate;
+
 
     public Monitor(){
 
     }
 
-    public Monitor(int id, String module, String subjectarea, String class_section, String lesson_date_id) {
+    public Monitor(int id, String module, String subjectarea, String class_section, String lesson_date_id, String start_time, String end_time, String L_Date, String Uuid) {
         this.id = id;
         this.module = module;
         this.subjectarea = subjectarea;
         this.class_section = class_section;
         this.lesson_date_id = lesson_date_id;
+        this.start_time = start_time;
+        this.end_time = end_time;
+        this.L_Date = L_Date;
+        this.Uuid = Uuid;
     }
 
     public String getLdate() {
@@ -67,6 +85,22 @@ public class Monitor {
         this.lesson_date_id = lesson_date_id;
     }
 
+    public void setStart_time(String start_time){
+        this.start_time = start_time;
+    }
+
+    public void setEnd_time(String end_time){
+        this.end_time = end_time;
+    }
+
+    public void setL_Date(String L_Date){
+        this.L_Date = L_Date;
+    }
+
+    public void setUuid(String Uuid){
+        this.Uuid = Uuid;
+    }
+
     public int getId() {
         return id;
     }
@@ -85,5 +119,21 @@ public class Monitor {
 
     public String getLesson_date_id() {
         return lesson_date_id;
+    }
+
+    public String getStart_time(){
+        return start_time;
+    }
+
+    public String getEnd_time(){
+        return end_time;
+    }
+
+    public String getL_Date(){
+        return L_Date;
+    }
+
+    public String getUuid(){
+        return Uuid;
     }
 }
