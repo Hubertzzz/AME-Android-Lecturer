@@ -266,11 +266,13 @@ public class AttendanceTakenFragment extends Fragment {
                                             BeaconParser beaconParser = new BeaconParser()
                                                     .setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24");
                                             beaconTransmitter = new BeaconTransmitter(getActivity().getBaseContext(),beaconParser);
+                                            tvInfo.setText("Now\n transmitting beacons\n for students");
+                                            btnActivateBeacon.setVisibility(View.VISIBLE);
                                             break;
                                         }
 
 
-                                    }/*else {
+                                    }else {
                                         DatabaseManager monitorDao= new DatabaseManager(getActivity());
                                         Monitor monitor=new Monitor();
                                         monitorDao.deleteMonitor();
@@ -279,7 +281,9 @@ public class AttendanceTakenFragment extends Fragment {
                                         tvModule.setText("");
                                         tvTime.setText("");
                                         tvVenue.setText("");
-                                    }*/
+                                        tvInfo.setText("");
+                                        btnActivateBeacon.setVisibility(View.INVISIBLE);
+                                    }
 
                                 }
 
