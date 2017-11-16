@@ -21,11 +21,6 @@ import java.util.Map;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     // name of the database file for your application -- change to something appropriate for your app
-<<<<<<< HEAD
-    private static final String DATABASE_NAME = "MonitorDB1.db";
-=======
-    private static final String DATABASE_NAME = "DB.db";
->>>>>>> refs/remotes/origin/master
 
 
 
