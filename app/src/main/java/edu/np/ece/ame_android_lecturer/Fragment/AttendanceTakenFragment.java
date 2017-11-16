@@ -224,7 +224,6 @@ public class AttendanceTakenFragment extends Fragment {
 
 
 
-
                                         String aStartTime = String.valueOf(timetableList.get(i).getLesson().getStart_time());
                                         String aEndTime = String.valueOf(timetableList.get(i).getLesson().getEnd_time());
                                         tvTime.setText(aStartTime+" - "+aEndTime);

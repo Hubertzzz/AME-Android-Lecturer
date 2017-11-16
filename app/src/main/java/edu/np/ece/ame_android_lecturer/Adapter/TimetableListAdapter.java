@@ -26,15 +26,16 @@ public class TimetableListAdapter extends ArrayAdapter<TimetableResult> {
     int layoutSeparatorId;
     List<TimetableResult> data;
     List<Integer> dataType;
-    List<LessonDate> lessonDateList;
+    List<String> weekday;
 
-    public TimetableListAdapter(Context context, int layoutResourceId, int layoutSeparatorId, List<TimetableResult> data,List<LessonDate> lessonDateList, List<Integer> dataType) {
+
+    public TimetableListAdapter(Context context, int layoutResourceId, int layoutSeparatorId, List<TimetableResult> data,List<String> weekday, List<Integer> dataType) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.layoutSeparatorId = layoutSeparatorId;
         this.context = context;
         this.data = data;
-        this.lessonDateList=lessonDateList;
+        this.weekday=weekday;
         this.dataType = dataType;
     }
 
@@ -102,7 +103,7 @@ public class TimetableListAdapter extends ArrayAdapter<TimetableResult> {
             switch (itemType) {
                 //Put data into layout for display weekday
                 case Preferences.LIST_ITEM_TYPE_1:
-                    separatorHolder.tvWeekDay.setText(lessonDateList.get(position).getDate());
+                    separatorHolder.tvWeekDay.setText(weekday.get(position));
                   //  separatorHolder.tvWeekDay.setText(subject.getLesson_date().getDate());
                     break;
 
