@@ -27,6 +27,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "DB.db";
 >>>>>>> refs/remotes/origin/master
 
+
+
+    private static final String DATABASE_NAME = "DB1.db";
+
+
     // any time you make changes to your database objects, you may have to increase the database versdion
     private static final int DATABASE_VERSION = 1;
 

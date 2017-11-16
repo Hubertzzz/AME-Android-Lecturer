@@ -25,6 +25,7 @@ public class Monitor {
     private String lesson_date_id;
 
 <<<<<<< HEAD
+
     @DatabaseField
     private String start_time;
 
@@ -37,9 +38,11 @@ public class Monitor {
     @DatabaseField
     private String Uuid;
 =======
+
     @DatabaseField (columnName = "Ldate")
     private String Ldate;
 >>>>>>> refs/remotes/origin/master
+
 
     public Monitor(){
 

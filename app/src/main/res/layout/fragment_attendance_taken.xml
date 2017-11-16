@@ -59,51 +59,30 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tvInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/tvInfo"
-                android:layout_marginTop="40dp"
                 android:layout_below="@+id/tvVenue"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="40dp"
                 android:gravity="center"
                 android:text="Now\n transmitting beacons\n for students"
-                android:textSize="15sp"
-                android:layout_centerHorizontal="true"/>
+                android:textSize="25sp"
+                android:textColor="@color/green"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvLeft"
-                android:layout_below="@id/tvInfo"
-                android:layout_marginTop="50dp"
-                android:textColor="@color/red"
-                android:text="Students left"
-                android:gravity="center"
-                android:textStyle="bold"
-                android:textSize="15sp"
-                />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btnStop"
-                android:layout_below="@id/tvLeft"
-                android:layout_marginTop="50dp"
-                android:layout_centerHorizontal="true"
-                android:text="STOP Transmit"
-                android:background="#00000000"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/btnStop"
-                android:layout_marginTop="50dp"
-                android:clickable="true"
-                android:gravity="center"
-                android:text="Entire Student list"
-                android:textColor="@color/md_blue_A200"
-                android:textSize="13sp"
-                android:textStyle="bold"
-                android:id="@+id/tvEntire"/>
+           <ImageButton
+               android:layout_width="340dp"
+               android:layout_height="250dp"
+               android:id="@+id/btnActivateBeacon"
+               android:layout_centerHorizontal="true"
+               android:layout_marginTop="240dp"
+               android:layout_gravity="center"
+               android:background="@drawable/bluetooth6"
+               android:elevation="10dp"/>
+
+
 
 
 

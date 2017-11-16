@@ -9,7 +9,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,11 +76,12 @@ public class AttendanceTakenFragment extends Fragment {
     private String aClass;
     private String aModule;
     private String aModuleSec;
-<<<<<<< HEAD
+    int Beaconstatus = 1;
+
     private String aLDate;
-=======
+
     private String Ldate;
->>>>>>> refs/remotes/origin/master
+
 
 
 
@@ -121,11 +122,13 @@ public class AttendanceTakenFragment extends Fragment {
     }
 
     private void loadInformation(){
+
         final TextView tvModule = (TextView)myView.findViewById(R.id.tvModule);
         final TextView tvClass = (TextView)myView.findViewById(R.id.tvClass);
         final TextView tvTime = (TextView)myView.findViewById(R.id.tvTime);
         final TextView tvVenue = (TextView)myView.findViewById(R.id.tvVenue);
-        final Button btnStop = (Button)myView.findViewById(R.id.btnStop);
+        final ImageButton btnActivateBeacon = (ImageButton)myView.findViewById(R.id.btnActivateBeacon);
+
         final TextView tvInfo = (TextView)myView.findViewById(R.id.tvInfo);
         Preferences.showLoading(context,"Now Class","Loading data from server...");
         try{
@@ -204,15 +207,14 @@ public class AttendanceTakenFragment extends Fragment {
                                         monitor.setSubjectarea(aModuleSec);
                                         monitor.setClass_section(aClass);
                                         monitor.setLesson_date_id(date);
-<<<<<<< HEAD
+
                                         monitor.setL_Date(aLDate);
                                         monitor.setUuid(Uuid);
 
-=======
                                         monitor.setLdate(Ldate);
 
                                         monitorDao.addMonitor(monitor);
->>>>>>> refs/remotes/origin/master
+
 
 
                                       /*  DatabaseManager manager=new DatabaseManager(getActivity());
@@ -269,13 +271,16 @@ public class AttendanceTakenFragment extends Fragment {
                                         }
 
 
-                                    }else {
+                                    }/*else {
                                         DatabaseManager monitorDao= new DatabaseManager(getActivity());
                                         Monitor monitor=new Monitor();
                                         monitorDao.deleteMonitor();
                                         List<Monitor> monitors=monitorDao.getMonitor();
                                         tvClass.setText("no lesson");
-                                    }
+                                        tvModule.setText("");
+                                        tvTime.setText("");
+                                        tvVenue.setText("");
+                                    }*/
 
                                 }
 
@@ -298,12 +303,25 @@ public class AttendanceTakenFragment extends Fragment {
                         //}
                         beaconTransmitter.startAdvertising(beaconBuilder.build());
 
-                        btnStop.setOnClickListener(new View.OnClickListener() {
+                        btnActivateBeacon.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                             /*   if(Beaconstatus == 1){*/
                                 beaconTransmitter.stopAdvertising();
                                 Toast.makeText(context,"Stop Advertising.....",Toast.LENGTH_SHORT).show();
                                 tvInfo.setText("Finished Transmiting");
+                                   /* Beaconstatus = 0;*/
+                                btnActivateBeacon.setBackgroundResource(R.drawable.bluetooth_light);
+                                tvInfo.setTextColor(tvInfo.getResources().getColor(R.color.md_amber_800));
+/*                                else{
+                                    beaconTransmitter.startAdvertising(beaconBuilder.build());
+                                    Toast.makeText(context,"Start Advertising.....",Toast.LENGTH_SHORT).show();
+                                    tvInfo.setText("Now\n transmitting beacons\n for students");
+                                    Beaconstatus = 1;
+                                    btnActivateBeacon.setBackgroundResource(R.drawable.bluetooth6);
+                                    tvInfo.setTextColor(tvInfo.getResources().getColor(R.color.green));
+                                }*/
+
                             }
                         });
                     }catch(Exception e){
